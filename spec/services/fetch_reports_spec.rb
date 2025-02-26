@@ -2,12 +2,12 @@
 
 RSpec.describe(DiscourseRewind::FetchReports) do
   describe ".call" do
+    subject(:result) { described_class.call(**dependencies) }
+
     fab!(:current_user) { Fabricate(:user) }
 
     let(:guardian) { Guardian.new(current_user) }
     let(:dependencies) { { guardian: } }
-
-    subject(:result) { described_class.call(**dependencies) }
 
     context "when in january" do
       before { freeze_time DateTime.parse("2021-01-22") }
