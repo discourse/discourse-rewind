@@ -2,12 +2,12 @@
 
 RSpec.describe(DiscourseRewind::FetchReports) do
   describe ".call" do
-    subject(:result) { described_class.call(**dependencies) }
-
     fab!(:current_user) { Fabricate(:user) }
 
     let(:guardian) { Guardian.new(current_user) }
     let(:dependencies) { { guardian: } }
+
+    subject(:result) { described_class.call(**dependencies) }
 
     context "when in january" do
       before { freeze_time DateTime.parse("2021-01-22") }
@@ -37,9 +37,9 @@ RSpec.describe(DiscourseRewind::FetchReports) do
       it "returns the cached reports" do
         expect(result.reports.length).to eq(9)
 
-        expect(DiscourseRewind::Action::TopWords).not_to have_received(:call)
-
+        allow(DiscourseRewind::Action::TopWords).to receive(:call)
         expect(result.reports.length).to eq(9)
+        expect(DiscourseRewind::Action::TopWords).to_not have_received(:call)
       end
     end
 
@@ -50,8 +50,9 @@ RSpec.describe(DiscourseRewind::FetchReports) do
       end
 
       it "returns the reports" do
-        expect(DiscourseRewind::Action::TopWords).to have_received(:call)
+        allow(DiscourseRewind::Action::TopWords).to receive(:call)
         expect(result.reports.length).to eq(9)
+        expect(DiscourseRewind::Action::TopWords).to have_received(:call)
       end
     end
   end
