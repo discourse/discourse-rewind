@@ -32,6 +32,8 @@ RSpec.describe(DiscourseRewind::FetchReports) do
     end
 
     context "when reports is cached" do
+      before { freeze_time DateTime.parse("2021-12-22") }
+
       it "returns the cached reports" do
         expect(result.reports.length).to eq(9)
 
