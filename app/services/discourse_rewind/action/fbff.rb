@@ -5,9 +5,9 @@
 module DiscourseRewind
   module Action
     class Fbff < BaseReport
-      MAX_SUMMARY_RESULTS ||= 50
-      LIKE_SCORE ||= 1
-      REPLY_SCORE ||= 10
+      MAX_SUMMARY_RESULTS = 50
+      LIKE_SCORE = 1
+      REPLY_SCORE = 10
 
       def call
         most_liked_users =

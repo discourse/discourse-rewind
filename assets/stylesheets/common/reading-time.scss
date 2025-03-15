@@ -8,14 +8,15 @@
 .book {
   width: 150px;
   height: 200px;
-  @media screen and (width <= 475px) {
-    width: 100px;
-    height: 133px;
-  }
   position: relative;
   transform-style: preserve-3d;
   transform: rotateY(-20deg);
   z-index: 2;
+
+  @media screen and (max-width: 475px) {
+    width: 100px;
+    height: 133px;
+  }
 }
 
 p.reading-time__text {
@@ -32,29 +33,24 @@ p.reading-time__text {
   left: 0;
   width: 150px;
   height: 200px;
-  @media screen and (width <= 475px) {
-    width: 100px;
-    height: 133px;
-  }
   transform: translateZ(17.5px);
   background-color: #01060f;
   border-radius: 0 5px 5px 0;
   box-shadow: 5px 5px 20px rgba(var(--primary-rgb), 0.05);
+
+  @media screen and (max-width: 475px) {
+    width: 100px;
+    height: 133px;
+  }
 }
 
 .book::before {
   position: absolute;
   content: " ";
-  background-color: blue;
   left: 0;
   top: 4px;
   width: 33px;
   height: 192px;
-  @media screen and (width <= 475px) {
-    left: -43px;
-    width: 22px;
-    height: 125px;
-  }
   transform: translateX(128.5px) rotateY(90deg);
   background: linear-gradient(
     90deg,
@@ -80,6 +76,12 @@ p.reading-time__text {
     #b6b6b6 95%,
     #b6b6b6 100%
   );
+
+  @media screen and (max-width: 475px) {
+    left: -43px;
+    width: 22px;
+    height: 125px;
+  }
 }
 
 .book::after {
@@ -92,8 +94,9 @@ p.reading-time__text {
   transform: translateZ(-17.5px);
   background-color: var(--book-color);
   border-radius: 0 5px 5px 0;
-  box-shadow: 0px 0px 1px 1px rgba(0, 0, 0, 0.25);
-  @media screen and (width <= 475px) {
+  box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.25);
+
+  @media screen and (max-width: 475px) {
     width: 100px;
     height: 133px;
   }
@@ -102,7 +105,8 @@ p.reading-time__text {
 .reading-time__text {
   font-weight: normal;
   width: 50%;
-  @media screen and (width <= 475px) {
+
+  @media screen and (max-width: 475px) {
     font-size: var(--font-down-2);
   }
 }
@@ -110,45 +114,43 @@ p.reading-time__text {
 .reading-time .rewind-card {
   gap: 1em;
   padding: 1.5em;
-  @media screen and (width <= 475px) {
-    padding: 0.75em;
-  }
   flex-direction: row;
   justify-content: space-around;
   align-items: center;
   background-color: var(--secondary);
+
   --book-color: var(--primary-very-high);
+
   @include rewind-border;
+
+  @media screen and (max-width: 475px) {
+    padding: 0.75em;
+  }
 }
 
 .book-series {
   width: 150px;
   height: 200px;
-  @media screen and (width <= 475px) {
-    width: 100px;
-    height: 133px;
-  }
-  position: relative;
   transform-style: preserve-3d;
   transform: rotateY(-20deg);
   position: absolute;
   background-color: var(--book-color);
   border-radius: 0 5px 5px 0;
-  box-shadow: 0px 0px 1px 1px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.25);
   z-index: 1;
+
+  @media screen and (max-width: 475px) {
+    width: 100px;
+    height: 133px;
+  }
+
   &::before {
     position: absolute;
     content: " ";
-    background-color: blue;
     left: 0;
     top: 4px;
     width: 33px;
     height: 192px;
-    @media screen and (width <= 475px) {
-      left: -43px;
-      width: 22px;
-      height: 125px;
-    }
     transform: translateX(128.5px) rotateY(90deg);
     background: linear-gradient(
       90deg,
@@ -174,29 +176,41 @@ p.reading-time__text {
       #b6b6b6 95%,
       #b6b6b6 100%
     );
+
+    @media screen and (max-width: 475px) {
+      left: -43px;
+      width: 22px;
+      height: 125px;
+    }
   }
+
   &.one {
     top: 3px;
     left: 14px;
-    @media screen and (width <= 475px) {
+
+    @media screen and (max-width: 475px) {
       top: 3px;
       left: 11px;
     }
   }
+
   &.two {
     top: 5px;
     left: 22px;
     z-index: -1;
-    @media screen and (width <= 475px) {
+
+    @media screen and (max-width: 475px) {
       top: 5px;
       left: 17px;
     }
   }
+
   &.three {
     top: 7px;
     left: 31px;
     z-index: -2;
-    @media screen and (width <= 475px) {
+
+    @media screen and (max-width: 475px) {
       display: none;
     }
   }

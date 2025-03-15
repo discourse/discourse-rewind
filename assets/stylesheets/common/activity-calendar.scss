@@ -1,17 +1,22 @@
 .-activity-calendar {
   margin-bottom: 5em;
+
   .rewind-card {
     @include rewind-border;
-    @media screen and (width <= 475px) {
+
+    @media screen and (max-width: 475px) {
       padding: 0.5em;
     }
   }
+
   .rewind-calendar {
     border-collapse: unset;
     border-spacing: 3px;
-    @media screen and (width <= 475px) {
+
+    @media screen and (max-width: 475px) {
       border-spacing: 1px;
     }
+
     tr {
       border: none;
     }
@@ -26,21 +31,26 @@
   .rewind-calendar-cell {
     height: 10px;
     width: 10px;
-    @media screen and (width <= 475px) {
+    border-radius: calc(var(--rewind-border-radius) / 2);
+    border: 1px solid rgba(var(--primary-rgb), 0.2);
+
+    @media screen and (max-width: 475px) {
       height: 5px;
       width: 5px;
     }
-    border-radius: calc(var(--rewind-border-radius) / 2);
-    border: 1px solid rgba(var(--primary-rgb), 0.2);
+
     &.-empty {
       background: var(--primary-low);
     }
+
     &.-low {
       background: var(--tertiary-low);
     }
+
     &.-medium {
       background: var(--tertiary-medium);
     }
+
     &.-high {
       background: var(--tertiary-high);
     }

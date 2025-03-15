@@ -7,6 +7,7 @@
 
 .cards-container {
   display: flex;
+
   @media (max-width: 525px) {
     display: grid;
     grid-template:
@@ -21,18 +22,23 @@
       ".  .  .  d  d  c  c  .  .  . " auto
       ".  .  .  d  d  c  c  .  .  . " auto
       / auto auto auto auto auto auto auto auto;
+
     .rewind-card__wrapper:nth-child(1) {
       grid-area: w;
     }
+
     .rewind-card__wrapper:nth-child(2) {
       grid-area: a;
     }
+
     .rewind-card__wrapper:nth-child(3) {
       grid-area: z;
     }
+
     .rewind-card__wrapper:nth-child(4) {
       grid-area: d;
     }
+
     .rewind-card__wrapper:nth-child(5) {
       grid-area: c;
     }
@@ -42,17 +48,6 @@
 .rewind-card__wrapper {
   width: 150px;
   height: 175px;
-  @media screen and (width <= 625px) {
-    width: 115px;
-  }
-  @media screen and (width <= 475px) {
-    width: 100px;
-    height: 125px;
-  }
-  @media screen and (width <= 350px) {
-    width: 80px;
-    height: 125px;
-  }
   perspective: 1000px;
   will-change: transform;
   transform-style: preserve-3d;
@@ -65,14 +60,31 @@
   animation-timing-function: ease-in-out;
   transform: rotateZ(calc(var(--ambientAmount) * 10deg));
   z-index: 1;
+
+  @media screen and (max-width: 625px) {
+    width: 115px;
+  }
+
+  @media screen and (max-width: 475px) {
+    width: 100px;
+    height: 125px;
+  }
+
+  @media screen and (max-width: 350px) {
+    width: 80px;
+    height: 125px;
+  }
+
   .rewind-card {
     box-shadow: 0 0 0 4px rgba(var(--mystery-color-light), 1);
     border: none;
+
     @if is-dark-color-scheme() {
       background-color: var(--primary-200);
       box-shadow: 0 0 0 4px rgba(var(--mystery-color-dark), 1);
     }
   }
+
   .rewind-card__inner {
     position: relative;
     width: 100%;
@@ -82,42 +94,48 @@
     transition: transform, box-shadow;
     transition-duration: 0.35s;
     transition-timing-function: cubic-bezier(0.73, 0.42, 0.03, 0.78);
+    box-shadow: 0 0 6px 2px rgba(var(--primary-rgb), 0.25);
+
+    @if is-dark-color-scheme() {
+      box-shadow: 0 0 6px 2px rgba(var(--secondary-rgb), 0.9);
+    }
   }
+
   &.mouseleave {
     animation: flip-shrink 0.35s cubic-bezier(0.73, 0.42, 0.03, 0.78) 0s
       forwards;
     z-index: 999;
   }
+
   &.flipped .rewind-card__inner {
     transform: rotateY(180deg);
   }
+
   &:hover {
     animation: flip-zoom 0.35s cubic-bezier(0.73, 0.42, 0.03, 0.78) 0s forwards;
     z-index: 999;
   }
+
   &:hover .rewind-card__inner {
-    box-shadow: 0px 3px 8px 2px rgba(var(--primary-rgb), 0.25);
+    box-shadow: 0 3px 8px 2px rgba(var(--primary-rgb), 0.25);
+
     @if is-dark-color-scheme() {
-      box-shadow: 0px 3px 8px 2px rgba(var(--primary-rgb), 0.25);
+      box-shadow: 0 3px 8px 2px rgba(var(--primary-rgb), 0.25);
     }
   }
-  .rewind-card__inner {
-    box-shadow: 0px 0px 6px 2px rgba(var(--primary-rgb), 0.25);
-    @if is-dark-color-scheme() {
-      box-shadow: 0px 0px 6px 2px rgba(var(--secondary-rgb), 0.9);
-    }
-  }
+
   .rewind-card.-back {
     transform: rotateY(180deg);
   }
+
   .rewind-card.-front,
   .rewind-card.-back {
     position: absolute;
     width: 100%;
-    height: 100%;
-    -webkit-backface-visibility: hidden; /* Safari */
+    height: 100%; /* Safari */
     backface-visibility: hidden;
   }
+
   .rewind-card.-front {
     padding: 0.5em;
     display: grid;
@@ -128,7 +146,8 @@
       ".  .  . " 1fr
       ".  .  br" 1fr
       / 1fr 3fr 1fr;
-    background: radial-gradient(
+    background:
+      radial-gradient(
           circle at 4px 4px,
           var(--primary-100) 1px,
           var(--secondary) 1px,
@@ -137,48 +156,61 @@
         0 0 / 6px 6px,
       var(--secondary-low);
   }
+
   &.-long-word .rewind-card__title {
     font-size: var(--font-0);
   }
+
   &.-long-word .rewind-card {
     padding: 2px;
   }
+
   .rewind-card__title {
     overflow-wrap: anywhere;
     hyphens: auto;
   }
+
   .rewind-card__image {
     image-rendering: pixelated;
   }
+
   .rewind-card__image.tl {
     grid-area: tl;
+
     img {
       width: 20px;
       height: 20px;
-      @media screen and (width <= 475px) {
+
+      @media screen and (max-width: 475px) {
         height: 15px;
         width: 15px;
       }
     }
   }
+
   .rewind-card__image.cr {
     grid-area: cr;
+
     img {
       width: 50px;
       height: 50px;
-      @media screen and (width <= 475px) {
+
+      @media screen and (max-width: 475px) {
         height: 30px;
         width: 30px;
       }
     }
   }
+
   .rewind-card__image.br {
     grid-area: br;
+
     img {
       width: 20px;
       height: 20px;
       transform: rotate(180deg);
-      @media screen and (width <= 475px) {
+
+      @media screen and (max-width: 475px) {
         height: 15px;
         width: 15px;
       }
@@ -190,9 +222,11 @@
   0% {
     transform: scale(1);
   }
+
   50% {
     transform: scale(0.9);
   }
+
   100% {
     transform: scale(1.25);
   }
@@ -202,9 +236,11 @@
   0% {
     transform: scale(1.25);
   }
+
   50% {
     transform: scale(0.9);
   }
+
   100% {
     transform: scale(1);
   }
@@ -214,9 +250,11 @@
   0% {
     --ambientAmount: 0.1;
   }
+
   50% {
     --ambientAmount: -0.1;
   }
+
   100% {
     --ambientAmount: 0.1;
   }
