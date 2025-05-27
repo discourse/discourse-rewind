@@ -4,7 +4,7 @@
     justify-content: space-between;
     gap: 0.5em;
 
-    @media screen and (max-width: 475px) {
+    @media screen and (width <= 475px) {
       gap: 0.125em;
     }
   }
@@ -82,7 +82,7 @@
     transform: rotateZ(calc(var(--ambientAmount) * 13deg));
   }
 
-  @media screen and (max-width: 625px) {
+  @media screen and (width <= 625px) {
     .scale {
       width: min-content;
     }
@@ -108,7 +108,7 @@
     }
   }
 
-  @media screen and (max-width: 475px) {
+  @media screen and (width <= 475px) {
     .scale {
       width: min-content;
     }

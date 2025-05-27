@@ -59,7 +59,7 @@
   }
 
   .best-posts__post {
-    @media screen and (max-width: 475px) {
+    @media screen and (width <= 475px) {
       max-height: 300px;
       text-overflow: ellipsis;
       overflow: hidden;
@@ -81,7 +81,7 @@
     text-align: left;
     color: var(--primary-800);
 
-    @media screen and (max-width: 475px) {
+    @media screen and (width <= 475px) {
       font-size: var(--font-down-2);
     }
   }

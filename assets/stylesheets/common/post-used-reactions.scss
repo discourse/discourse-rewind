@@ -30,7 +30,7 @@
 
   .rewind-reactions-bar {
     background: var(--tertiary-600);
-    border: 1px solid rgba(var(--primary-rgb), 0.2);
+    border: 1px solid rgb(var(--primary-rgb), 0.2);
     height: 25px;
     border-radius: calc(var(--rewind-border-radius) * 0.75);
   }

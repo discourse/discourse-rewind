@@ -17,17 +17,17 @@
   &:focus {
     background: var(--primary) !important;
     box-shadow:
-      0 0 0 2px rgba(var(--d-blue), 1),
-      0 0 0 4px rgba(var(--d-green), 1),
-      0 0 0 6px rgba(var(--d-orange), 1),
-      0 0 0 8px rgba(var(--d-red), 1);
+      0 0 0 2px rgb(var(--d-blue), 1),
+      0 0 0 4px rgb(var(--d-green), 1),
+      0 0 0 6px rgb(var(--d-orange), 1),
+      0 0 0 8px rgb(var(--d-red), 1);
 
     @if color-scheme-is-light {
       box-shadow:
-        0 0 0 2px rgba(var(--d-blue-dark), 1),
-        0 0 0 4px rgba(var(--d-green-dark), 1),
-        0 0 0 6px rgba(var(--d-orange-dark), 1),
-        0 0 0 8px rgba(var(--d-red-dark), 1);
+        0 0 0 2px rgb(var(--d-blue-dark), 1),
+        0 0 0 4px rgb(var(--d-green-dark), 1),
+        0 0 0 6px rgb(var(--d-orange-dark), 1),
+        0 0 0 8px rgb(var(--d-red-dark), 1);
     }
   }
 

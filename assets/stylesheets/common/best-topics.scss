@@ -89,7 +89,7 @@
     color: var(--primary-800);
     text-align: left;
 
-    @media screen and (max-width: 475px) {
+    @media screen and (width <= 475px) {
       max-width: 100%;
       overflow: hidden;
       font-size: var(--font-down-2);

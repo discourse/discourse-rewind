@@ -21,10 +21,10 @@
     width: calc(100vw - (100vw - 100%) + 2px);
     height: 100vh;
     position: fixed;
-    background: rgba(var(--secondary-rgb), 0.5);
+    background: rgb(var(--secondary-rgb), 0.5);
     backdrop-filter: blur(4.9px);
 
-    @media (max-width: 768px) {
+    @media (width <= 768px) {
       padding: 0;
     }
   }
@@ -42,7 +42,7 @@
   overflow: hidden;
   background: var(--secondary);
 
-  @media (max-width: 768px) {
+  @media (width <= 768px) {
     border: none;
     border-radius: 0;
   }

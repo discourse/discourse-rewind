@@ -1,11 +1,11 @@
 .-fbff {
   --border-size: 6px;
 
-  @media screen and (max-width: 768px) {
+  @media screen and (width <= 768px) {
     --border-size: 4px;
   }
 
-  @media screen and (max-width: 475px) {
+  @media screen and (width <= 475px) {
     --border-size: 3px;
   }
 
@@ -15,7 +15,7 @@
 
     @include rewind-border;
 
-    @media screen and (max-width: 625px) {
+    @media screen and (width <= 625px) {
       grid-template-columns: 1fr 1fr 1fr;
       grid-template-rows: min-content min-content;
       grid-template-areas: "gif gif gif" "friend nothing you";
@@ -30,7 +30,7 @@
     justify-self: center;
     z-index: 10;
 
-    @media screen and (max-width: 625px) {
+    @media screen and (width <= 625px) {
       grid-area: gif;
     }
   }
@@ -46,7 +46,7 @@
     grid-template-rows: 1fr min-content;
     flex-direction: column;
 
-    @media screen and (max-width: 625px) {
+    @media screen and (width <= 625px) {
       &:first-of-type {
         grid-area: friend;
       }
@@ -62,12 +62,12 @@
       width: 75px;
       height: 75px;
 
-      @media screen and (max-width: 768px) {
+      @media screen and (width <= 768px) {
         width: 50px;
         height: 50px;
       }
 
-      @media screen and (max-width: 475px) {
+      @media screen and (width <= 475px) {
         width: 25px;
         height: 25px;
       }
@@ -83,7 +83,7 @@
     font-size: var(--font-down-1);
     font-family: "Pixelify Sans", sans-serif;
 
-    @media screen and (max-width: 475px) {
+    @media screen and (width <= 475px) {
       font-size: var(--font-down-3);
     }
   }

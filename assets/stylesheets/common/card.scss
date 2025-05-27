@@ -30,11 +30,11 @@
     font-size: var(--font-up-3);
     -webkit-font-smoothing: antialiased;
 
-    @media screen and (max-width: 525px) {
+    @media screen and (width <= 525px) {
       font-size: var(--font-up-2);
     }
 
-    @media screen and (max-width: 475px) {
+    @media screen and (width <= 475px) {
       font-size: var(--font-up-0);
     }
   }

@@ -9,7 +9,7 @@
   margin: 0 auto;
   flex-direction: column;
 
-  @media (max-width: 768px) {
+  @media (width <= 768px) {
     padding: 0.75em;
   }
 }
