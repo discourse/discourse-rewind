@@ -19,30 +19,30 @@ RSpec.describe DiscourseRewind::Action::BestPosts do
 
       expect(call_report[:data]).to eq(
         [
-          [
-            post_4.post_number,
-            post_4.topic_id,
-            post_4.like_count,
-            post_4.reply_count,
-            post_4.raw,
-            post_4.cooked,
-          ],
-          [
-            post_3.post_number,
-            post_3.topic_id,
-            post_3.like_count,
-            post_3.reply_count,
-            post_3.raw,
-            post_3.cooked,
-          ],
-          [
-            post_1.post_number,
-            post_1.topic_id,
-            post_1.like_count,
-            post_1.reply_count,
-            post_1.raw,
-            post_1.cooked,
-          ],
+          {
+            post_number: post_4.post_number,
+            topic_id: post_4.topic_id,
+            like_count: post_4.like_count,
+            reply_count: post_4.reply_count,
+            raw: post_4.raw,
+            cooked: post_4.cooked,
+          },
+          {
+            post_number: post_3.post_number,
+            topic_id: post_3.topic_id,
+            like_count: post_3.like_count,
+            reply_count: post_3.reply_count,
+            raw: post_3.raw,
+            cooked: post_3.cooked,
+          },
+          {
+            post_number: post_1.post_number,
+            topic_id: post_1.topic_id,
+            like_count: post_1.like_count,
+            reply_count: post_1.reply_count,
+            raw: post_1.raw,
+            cooked: post_1.cooked,
+          },
         ],
       )
     end
@@ -51,8 +51,7 @@ RSpec.describe DiscourseRewind::Action::BestPosts do
       before { post_1.trash!(Discourse.system_user) }
 
       it "is not included" do
-        result_simplified = call_report[:data].map { |d| "#{d[0]}-#{d[1]}" }
-        expect(result_simplified).not_to include("#{post_1.post_number}-#{post_1.topic_id}")
+        expect(call_report[:data].map { |d| d[:post_number] }).not_to include(post_1.post_number)
       end
     end
 
@@ -60,8 +59,7 @@ RSpec.describe DiscourseRewind::Action::BestPosts do
       before { post_1.update!(user: Fabricate(:user)) }
 
       it "is not included" do
-        result_simplified = call_report[:data].map { |d| "#{d[0]}-#{d[1]}" }
-        expect(result_simplified).not_to include("#{post_1.post_number}-#{post_1.topic_id}")
+        expect(call_report[:data].map { |d| d[:post_number] }).not_to include(post_1.post_number)
       end
     end
   end

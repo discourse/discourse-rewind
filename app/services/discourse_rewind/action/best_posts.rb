@@ -13,6 +13,16 @@ module DiscourseRewind
             .order("like_count DESC NULLS LAST")
             .limit(3)
             .pluck(:post_number, :topic_id, :like_count, :reply_count, :raw, :cooked)
+            .map do |post_number, topic_id, like_count, reply_count, raw, cooked|
+              {
+                post_number: post_number,
+                topic_id: topic_id,
+                like_count: like_count,
+                reply_count: reply_count,
+                raw: raw,
+                cooked: cooked,
+              }
+            end
 
         { data: best_posts, identifier: "best-posts" }
       end
