@@ -1,7 +1,6 @@
 import Component from "@glimmer/component";
-import concatClass from "discourse/helpers/concat-class";
-import { get } from "@ember/object";
 import { htmlSafe } from "@ember/template";
+import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
