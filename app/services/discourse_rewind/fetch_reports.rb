@@ -55,7 +55,11 @@ module DiscourseRewind
       when 12
         current_year
       else
-        false
+        if Rails.env.development?
+          current_year
+        else
+          false
+        end
       end
     end
 
