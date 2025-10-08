@@ -12,7 +12,7 @@ module ::DiscourseRewind
         on_model_not_found(:user) { raise Discourse::NotFound }
         on_success do |reports:|
           @reports = reports
-          render json: MultiJson.dump(reports), status: 200
+          render json: MultiJson.dump(reports), status: :ok
         end
       end
     end

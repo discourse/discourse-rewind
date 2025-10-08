@@ -4,7 +4,7 @@ RSpec.describe DiscourseRewind::RewindsController do
   before { SiteSetting.discourse_rewind_enabled = true }
 
   describe "#show" do
-    fab!(:current_user) { Fabricate(:user) }
+    fab!(:current_user, :user)
 
     before { sign_in(current_user) }
 

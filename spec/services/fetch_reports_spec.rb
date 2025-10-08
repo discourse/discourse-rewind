@@ -4,7 +4,7 @@ RSpec.describe(DiscourseRewind::FetchReports) do
   describe ".call" do
     subject(:result) { described_class.call(**dependencies) }
 
-    fab!(:current_user) { Fabricate(:user) }
+    fab!(:current_user, :user)
 
     let(:guardian) { Guardian.new(current_user) }
     let(:dependencies) { { guardian: } }

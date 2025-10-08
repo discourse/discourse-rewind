@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe "DiscourseRewind | rewind tab", type: :system do
-  fab!(:current_user) { Fabricate(:user) }
+  fab!(:current_user, :user)
 
   before do
     SiteSetting.discourse_rewind_enabled = true
