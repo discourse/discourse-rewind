@@ -5,7 +5,8 @@ module DiscourseRewind
   #
   # @example
   #  ::DiscourseRewind::Rewind::Fetch.call(
-  #    guardian: guardian
+  #    guardian: guardian,
+  #    params: { year: 2023, username: 'codinghorror' }
   #  )
   #
   class FetchReports
@@ -55,7 +56,11 @@ module DiscourseRewind
       when 12
         current_year
       else
-        false
+        if Rails.env.development?
+          current_year
+        else
+          false
+        end
       end
     end
 

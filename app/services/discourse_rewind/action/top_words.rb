@@ -10,7 +10,6 @@ module DiscourseRewind
           { word: "you", score: 80 },
           { word: "overachieved", score: 70 },
           { word: "assume", score: 60 },
-          { word: "week", score: 50 },
         ],
         identifier: "top-words",
       }
@@ -79,7 +78,13 @@ module DiscourseRewind
         LIMIT 100
       SQL
 
-        word_score = words.map { { word: _1.original_word, score: _1.ndoc + _1.nentry } }
+        word_score =
+          words
+            .map do |word_data|
+              { word: word_data.original_word, score: word_data.ndoc + word_data.nentry }
+            end
+            .sort_by! { |w| -w[:score] }
+            .take(5)
 
         { data: word_score, identifier: "top-words" }
       end
