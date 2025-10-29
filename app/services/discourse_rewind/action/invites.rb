@@ -19,22 +19,20 @@ module DiscourseRewind
         # Get the users who were invited (via InvitedUser or redeemed invites)
         invited_user_ids = InvitedUser.where(invite: invites).pluck(:user_id).compact
 
-        return if invited_user_ids.empty?
-
         invited_users = User.where(id: invited_user_ids)
 
         # Calculate impact of invitees
         invitee_post_count =
           Post
             .where(user_id: invited_user_ids)
-            .where("created_at >= ?", date.first)
+            .where(created_at: date)
             .where(deleted_at: nil)
             .count
 
         invitee_topic_count =
           Topic
             .where(user_id: invited_user_ids)
-            .where("created_at >= ?", date.first)
+            .where(created_at: date)
             .where(deleted_at: nil)
             .count
 
@@ -42,7 +40,7 @@ module DiscourseRewind
           UserAction
             .where(user_id: invited_user_ids)
             .where(action_type: UserAction::LIKE)
-            .where("created_at >= ?", date.first)
+            .where(created_at: date)
             .count
 
         # Calculate average trust level of invitees
@@ -54,7 +52,7 @@ module DiscourseRewind
           most_active_id =
             Post
               .where(user_id: invited_user_ids)
-              .where("created_at >= ?", date.first)
+              .where(created_at: date)
               .where(deleted_at: nil)
               .group(:user_id)
               .count

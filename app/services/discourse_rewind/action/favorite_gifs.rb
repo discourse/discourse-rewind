@@ -6,7 +6,13 @@ module DiscourseRewind
   module Action
     class FavoriteGifs < BaseReport
       GIF_URL_PATTERN =
-        %r{https?://[^\s]+\.(gif|gifv)|https?://(?:.*\.)?(?:giphy\.com|tenor\.com)/[^\s]+}i
+        %r{
+          https?://[^\s]+\.(?:gif|gifv)
+          |
+          https?://(?!(?:developers|support|blog)\.) (?:[^/\s]+\.)?giphy\.com/(?!dashboard\b)[^\s]+
+          |
+          https?://(?!(?:support)\.) (?:[^/\s]+\.)?tenor\.com/(?!gifapi\b)[^\s]+
+        }ix
       MAX_RESULTS = 5
 
       def call
@@ -58,11 +64,11 @@ module DiscourseRewind
             .where(user_id: user.id)
             .where(created_at: date)
             .where(deleted_at: nil)
-            .where("raw ~* ?", GIF_URL_PATTERN.source)
+            .where("raw ~* ?", gif_sql_pattern)
             .select(:id, :raw, :like_count)
 
         posts.each do |post|
-          gif_urls = post.raw.scan(GIF_URL_PATTERN).flatten.uniq
+          gif_urls = post.raw.scan(GIF_URL_PATTERN).uniq.select { |url| content_gif_url?(url) }
           gif_urls.each do |url|
             gif_usage[url] ||= { count: 0, likes: 0 }
             gif_usage[url][:count] += 1
@@ -81,11 +87,12 @@ module DiscourseRewind
             .where(user_id: user.id)
             .where(created_at: date)
             .where(deleted_at: nil)
-            .where("message ~* ?", GIF_URL_PATTERN.source)
+            .where("message ~* ?", gif_sql_pattern)
             .select(:id, :message)
 
         messages.each do |message|
-          gif_urls = message.message.scan(GIF_URL_PATTERN).flatten.uniq
+          gif_urls =
+            message.message.scan(GIF_URL_PATTERN).uniq.select { |url| content_gif_url?(url) }
           gif_urls.each do |url|
             gif_usage[url] ||= { count: 0, reactions: 0 }
             gif_usage[url][:count] += 1
@@ -97,6 +104,18 @@ module DiscourseRewind
         end
 
         gif_usage
+      end
+
+      def gif_sql_pattern
+        @gif_sql_pattern ||= GIF_URL_PATTERN.source.gsub(/\s+/, "")
+      end
+
+      def content_gif_url?(url)
+        return true if url.match?(/\.(gif|gifv)(?:\?|$)/i)
+        return true if url.match?(%r{giphy\.com/(?:gifs?|media|embed|stickers|clips)}i)
+        return true if url.match?(%r{tenor\.com/(?:view|watch|embed|gif)}i)
+
+        false
       end
     end
   end

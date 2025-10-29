@@ -18,24 +18,23 @@ module DiscourseRewind
         return if new_user_ids.empty?
 
         # Count likes given to new users
-        likes_given =
+        likes_scope =
           UserAction
-            .where(acting_user_id: user.id)
-            .where(user_id: new_user_ids)
-            .where(action_type: UserAction::WAS_LIKED)
+            .where(acting_user_id: user.id, user_id: new_user_ids, action_type: UserAction::WAS_LIKED)
             .where(created_at: date)
-            .count
+        likes_given = likes_scope.count
+        liked_user_ids = likes_scope.distinct.pluck(:user_id)
 
         # Count replies to new users' posts
-        replies_to_new_users =
+        replies_scope =
           Post
             .joins(
               "INNER JOIN posts AS parent_posts ON posts.reply_to_post_number = parent_posts.post_number AND posts.topic_id = parent_posts.topic_id",
             )
-            .where(posts: { user_id: user.id, deleted_at: nil })
+            .where(posts: { user_id: user.id, deleted_at: nil, created_at: date })
             .where("parent_posts.user_id": new_user_ids)
-            .where(posts: { created_at: date })
-            .count
+        replies_to_new_users = replies_scope.count
+        replied_user_ids = replies_scope.distinct.pluck("parent_posts.user_id")
 
         # Count topics created by user that new users participated in
         topics_with_new_users =
@@ -48,39 +47,18 @@ module DiscourseRewind
             .count
 
         # Count direct messages/mentions to new users
-        mentions_to_new_users =
+        mentions_scope =
           Post
             .joins(
               "INNER JOIN user_actions ON user_actions.target_post_id = posts.id AND user_actions.action_type = #{UserAction::MENTION}",
             )
-            .where(posts: { user_id: user.id, deleted_at: nil })
+            .where(posts: { user_id: user.id, deleted_at: nil, created_at: date })
             .where(user_actions: { user_id: new_user_ids })
-            .where(posts: { created_at: date })
-            .distinct
-            .count
+        mentions_to_new_users = mentions_scope.distinct.count
+        mentioned_user_ids = mentions_scope.distinct.pluck("user_actions.user_id")
 
         # Unique new users interacted with
-        unique_new_users_liked =
-          UserAction
-            .where(acting_user_id: user.id)
-            .where(user_id: new_user_ids)
-            .where(action_type: UserAction::WAS_LIKED)
-            .where(created_at: date)
-            .distinct
-            .count(:user_id)
-
-        unique_new_users_replied =
-          Post
-            .joins(
-              "INNER JOIN posts AS parent_posts ON posts.reply_to_post_number = parent_posts.post_number AND posts.topic_id = parent_posts.topic_id",
-            )
-            .where(posts: { user_id: user.id, deleted_at: nil })
-            .where("parent_posts.user_id": new_user_ids)
-            .where(posts: { created_at: date })
-            .distinct
-            .count("parent_posts.user_id")
-
-        unique_new_users = [unique_new_users_liked, unique_new_users_replied].max
+        unique_new_users = (liked_user_ids + replied_user_ids + mentioned_user_ids).uniq.count
 
         total_interactions = likes_given + replies_to_new_users + mentions_to_new_users
 

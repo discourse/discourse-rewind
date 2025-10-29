@@ -35,6 +35,11 @@ module DiscourseRewind
       def get_activity_by_hour
         # Get user timezone offset
         user_timezone = user.user_option&.timezone || "UTC"
+        quoted_timezone = ActiveRecord::Base.connection.quote(user_timezone)
+        hour_extract_sql =
+          Arel.sql(
+            "EXTRACT(HOUR FROM created_at AT TIME ZONE 'UTC' AT TIME ZONE #{quoted_timezone})::integer",
+          )
 
         # Initialize hash with all hours (0-23)
         activity = (0..23).to_h { |hour| [hour, 0] }
@@ -45,11 +50,7 @@ module DiscourseRewind
             .where(user_id: user.id)
             .where(created_at: date)
             .where(deleted_at: nil)
-            .pluck(
-              Arel.sql(
-                "EXTRACT(HOUR FROM created_at AT TIME ZONE 'UTC' AT TIME ZONE '#{user_timezone}')::integer",
-              ),
-            )
+            .pluck(hour_extract_sql)
             .tally
 
         # User visits (page views)
@@ -58,11 +59,7 @@ module DiscourseRewind
             .where(acting_user_id: user.id)
             .where(created_at: date)
             .where(action: UserHistory.actions[:page_view])
-            .pluck(
-              Arel.sql(
-                "EXTRACT(HOUR FROM created_at AT TIME ZONE 'UTC' AT TIME ZONE '#{user_timezone}')::integer",
-              ),
-            )
+            .pluck(hour_extract_sql)
             .tally
 
         # Chat messages if chat is enabled
@@ -72,11 +69,7 @@ module DiscourseRewind
               .where(user_id: user.id)
               .where(created_at: date)
               .where(deleted_at: nil)
-              .pluck(
-                Arel.sql(
-                  "EXTRACT(HOUR FROM created_at AT TIME ZONE 'UTC' AT TIME ZONE '#{user_timezone}')::integer",
-                ),
-              )
+              .pluck(hour_extract_sql)
               .tally
 
           chat_hours.each { |hour, count| activity[hour] += count }

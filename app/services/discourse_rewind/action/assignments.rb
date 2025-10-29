@@ -9,49 +9,37 @@ module DiscourseRewind
         return if !enabled?
 
         # Assignments made to the user
-        assigned_topics =
-          TopicAllowedUser
-            .joins(:topic)
-            .joins(
-              "INNER JOIN assignments ON assignments.topic_id = topics.id AND assignments.assigned_to_id = #{user.id}",
-            )
-            .where("assignments.created_at BETWEEN ? AND ?", date.first, date.last)
-            .where("assignments.assigned_to_type = 'User'")
-            .pluck(:topic_id)
-            .uniq
+        assignments_scope =
+          Assignment
+            .where(assigned_to_id: user.id, assigned_to_type: "User")
+            .where(created_at: date)
 
-        total_assigned = assigned_topics.count
+        total_assigned = assignments_scope.count
 
         # Completed assignments (topics that were assigned and then closed or unassigned)
         completed_count =
-          TopicAllowedUser
+          assignments_scope
             .joins(:topic)
-            .joins(
-              "INNER JOIN assignments ON assignments.topic_id = topics.id AND assignments.assigned_to_id = #{user.id}",
+            .where(
+              "topics.closed = true OR assignments.active = false OR assignments.updated_at > assignments.created_at",
             )
-            .where("assignments.created_at BETWEEN ? AND ?", date.first, date.last)
-            .where("assignments.assigned_to_type = 'User'")
-            .where("topics.closed = true OR assignments.updated_at > assignments.created_at")
             .distinct
             .count
 
         # Currently pending (still open and assigned)
         pending_count =
           Assignment
-            .where(assigned_to_id: user.id, assigned_to_type: "User")
+            .where(assigned_to_id: user.id, assigned_to_type: "User", active: true)
             .joins(:topic)
-            .where("topics.closed = false")
+            .where(topics: { closed: false })
             .count
 
         # Assignments made by the user to others
         assigned_by_user =
           Assignment
-            .where("assignments.created_at BETWEEN ? AND ?", date.first, date.last)
-            .joins(
-              "INNER JOIN posts ON posts.topic_id = assignments.topic_id AND posts.user_id = #{user.id}",
-            )
-            .distinct
-            .count(:topic_id)
+            .where(assigned_by_user_id: user.id)
+            .where(created_at: date)
+            .count
 
         {
           data: {
