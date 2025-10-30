@@ -13,8 +13,7 @@ module DiscourseRewind
         return if total_invites == 0
 
         # Redeemed invites (users who actually joined)
-        redeemed_invites = invites.where.not(redeemed_at: nil)
-        redeemed_count = redeemed_invites.count
+        redeemed_count = invites.where.not(redeemed_at: nil).count
 
         # Get the users who were invited (via InvitedUser or redeemed invites)
         invited_user_ids = InvitedUser.where(invite: invites).pluck(:user_id).compact
