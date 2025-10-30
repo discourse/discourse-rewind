@@ -17,7 +17,7 @@ module DiscourseRewind
             "COALESCE(SUM(request_tokens), 0) as total_request_tokens",
             "COALESCE(SUM(response_tokens), 0) as total_response_tokens",
             "COUNT(CASE WHEN response_tokens > 0 THEN 1 END) as successful_requests",
-          ).first
+          ).take
 
         return if stats.total_requests == 0
 
@@ -65,7 +65,7 @@ module DiscourseRewind
       end
 
       def enabled?
-        defined?(AiApiAuditLog) && SiteSetting.ai_enabled
+        defined?(AiApiAuditLog) && SiteSetting.discourse_ai_enabled
       end
     end
   end
