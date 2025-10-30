@@ -7,7 +7,8 @@ module DiscourseRewind
   module Action
     class TimeOfDayActivity < BaseReport
       EARLY_BIRD_THRESHOLD = 6..9
-      NIGHT_OWL_THRESHOLD = 22..23 # 10pm - 11pm (and 0-2am)
+      NIGHT_OWL_THRESHOLD_PM = 22..23
+      NIGHT_OWL_THRESHOLD_AM = 0..2
 
       def call
         # Get activity by hour of day (in user's timezone)
