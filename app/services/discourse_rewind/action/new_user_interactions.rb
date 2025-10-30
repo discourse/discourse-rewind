@@ -11,6 +11,7 @@ module DiscourseRewind
         # Find users who created accounts this year
         new_user_ids =
           User
+            .real
             .where("created_at >= ? AND created_at <= ?", year_start, date.last)
             .where("id != ?", user.id)
             .pluck(:id)
@@ -19,9 +20,11 @@ module DiscourseRewind
 
         # Count likes given to new users
         likes_scope =
-          UserAction
-            .where(acting_user_id: user.id, user_id: new_user_ids, action_type: UserAction::WAS_LIKED)
-            .where(created_at: date)
+          UserAction.where(
+            acting_user_id: user.id,
+            user_id: new_user_ids,
+            action_type: UserAction::WAS_LIKED,
+          ).where(created_at: date)
         likes_given = likes_scope.count
         liked_user_ids = likes_scope.distinct.pluck(:user_id)
 
