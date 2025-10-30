@@ -41,7 +41,7 @@ module DiscourseRewind
             "EXTRACT(HOUR FROM created_at AT TIME ZONE 'UTC' AT TIME ZONE #{quoted_timezone})::integer",
           )
 
-        # Initialize hash with all hours (0-23)
+        # Initialize hash with all hours
         activity = (0..23).to_h { |hour| [hour, 0] }
 
         # Posts created
