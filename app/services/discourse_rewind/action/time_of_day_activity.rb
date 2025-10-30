@@ -87,7 +87,7 @@ module DiscourseRewind
         early_bird_activity = EARLY_BIRD_THRESHOLD.sum { |hour| activity_by_hour[hour] || 0 }
         night_owl_activity =
           NIGHT_OWL_THRESHOLD.sum { |hour| activity_by_hour[hour] || 0 } +
-            (0..2).sum { |hour| activity_by_hour[hour] || 0 }
+            NIGHT_OWL_THRESHOLD_AM.sum { |hour| activity_by_hour[hour] || 0 }
 
         early_bird_percentage = (early_bird_activity.to_f / total_activities * 100).round(1)
         night_owl_percentage = (night_owl_activity.to_f / total_activities * 100).round(1)
