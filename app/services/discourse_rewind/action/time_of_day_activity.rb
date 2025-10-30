@@ -6,7 +6,7 @@
 module DiscourseRewind
   module Action
     class TimeOfDayActivity < BaseReport
-      EARLY_BIRD_THRESHOLD = 6..9 # 6am - 9am
+      EARLY_BIRD_THRESHOLD = 6..9
       NIGHT_OWL_THRESHOLD = 22..23 # 10pm - 11pm (and 0-2am)
 
       def call
