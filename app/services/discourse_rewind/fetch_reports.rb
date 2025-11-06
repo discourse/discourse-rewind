@@ -32,6 +32,13 @@ module DiscourseRewind
       Action::BestTopics,
       Action::BestPosts,
       Action::ActivityCalendar,
+      Action::TimeOfDayActivity,
+      Action::NewUserInteractions,
+      Action::ChatUsage,
+      Action::AiUsage,
+      Action::FavoriteGifs,
+      Action::Assignments,
+      Action::Invites,
     ]
 
     model :year
