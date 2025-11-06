@@ -62,7 +62,13 @@ module DiscourseRewind
       when 12
         current_year
       else
-        false
+        # Otherwise it's impossible to test in browser unless you're
+        # in December or January
+        if Rails.env.development?
+          current_year
+        else
+          false
+        end
       end
     end
 

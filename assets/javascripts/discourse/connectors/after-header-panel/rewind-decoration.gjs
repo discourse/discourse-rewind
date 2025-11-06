@@ -1,10 +1,12 @@
 import Component from "@glimmer/component";
+import { service } from "@ember/service";
 import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import bodyClass from "discourse/helpers/body-class";
 import KeyValueStore from "discourse/lib/key-value-store";
-import isRewindActive from "discourse/plugins/discourse-rewind/discourse/lib/is-rewind-active";
 
 export default class AvatarDecorator extends Component {
+  @service currentUser;
+
   store = new TrackedObject(
     new KeyValueStore("discourse_rewind_" + this.fetchYear)
   );
@@ -26,7 +28,7 @@ export default class AvatarDecorator extends Component {
   }
 
   get showDecorator() {
-    return isRewindActive() && !this.dismissed;
+    return this.currentUser?.is_rewind_active && !this.dismissed;
   }
 
   <template>
