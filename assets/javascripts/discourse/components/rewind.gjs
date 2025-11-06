@@ -11,10 +11,10 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import ActivityCalendar from "discourse/plugins/discourse-rewind/discourse/components/reports/activity-calendar";
 import BestPosts from "discourse/plugins/discourse-rewind/discourse/components/reports/best-posts";
 import BestTopics from "discourse/plugins/discourse-rewind/discourse/components/reports/best-topics";
-import FavoriteCategories from "discourse/plugins/discourse-rewind/discourse/components/reports/favorite-categories";
-import FavoriteTags from "discourse/plugins/discourse-rewind/discourse/components/reports/favorite-tags";
 import FBFF from "discourse/plugins/discourse-rewind/discourse/components/reports/fbff";
 import RewindHeader from "discourse/plugins/discourse-rewind/discourse/components/reports/header";
+import MostViewedCategories from "discourse/plugins/discourse-rewind/discourse/components/reports/most-viewed-categories";
+import MostViewedTags from "discourse/plugins/discourse-rewind/discourse/components/reports/most-viewed-tags";
 import Reactions from "discourse/plugins/discourse-rewind/discourse/components/reports/reactions";
 import ReadingTime from "discourse/plugins/discourse-rewind/discourse/components/reports/reading-time";
 import TopWords from "discourse/plugins/discourse-rewind/discourse/components/reports/top-words";
@@ -114,12 +114,12 @@ export default class Rewind extends Component {
                   <BestTopics @report={{report}} />
                 {{else if (eq report.identifier "activity-calendar")}}
                   <ActivityCalendar @report={{report}} />
-                {{else if (eq report.identifier "favorite-tags")}}
-                  <FavoriteTags @report={{report}} />
+                {{else if (eq report.identifier "most-viewed-tags")}}
+                  <MostViewedTags @report={{report}} />
                 {{else if (eq report.identifier "reading-time")}}
                   <ReadingTime @report={{report}} />
-                {{else if (eq report.identifier "favorite-categories")}}
-                  <FavoriteCategories @report={{report}} />
+                {{else if (eq report.identifier "most-viewed-categories")}}
+                  <MostViewedCategories @report={{report}} />
                 {{/if}}
               </div>
             {{/each}}

@@ -3,7 +3,7 @@
 # Topics visited grouped by tag
 module DiscourseRewind
   module Action
-    class FavoriteTags < BaseReport
+    class MostViewedTags < BaseReport
       FakeData = {
         data: [
           { tag_id: 1, name: "cats" },
@@ -12,13 +12,13 @@ module DiscourseRewind
           { tag_id: 4, name: "management" },
           { tag_id: 5, name: "things" },
         ],
-        identifier: "favorite-tags",
+        identifier: "most-viewed-tags",
       }
 
       def call
         return FakeData if Rails.env.development?
 
-        favorite_tags =
+        most_viewed_tags =
           TopicViewItem
             .joins(:topic)
             .joins("INNER JOIN topic_tags ON topic_tags.topic_id = topics.id")
@@ -32,7 +32,7 @@ module DiscourseRewind
             .pluck("tags.id, tags.name")
             .map { |tag_id, name| { tag_id: tag_id, name: name } }
 
-        { data: favorite_tags, identifier: "favorite-tags" }
+        { data: most_viewed_tags, identifier: "most-viewed-tags" }
       end
     end
   end
