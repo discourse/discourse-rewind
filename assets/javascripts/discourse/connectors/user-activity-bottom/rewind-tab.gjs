@@ -4,7 +4,7 @@ import { i18n } from "discourse-i18n";
 import isRewindActive from "discourse/plugins/discourse-rewind/discourse/lib/is-rewind-active";
 
 const RewindTab = <template>
-  {{#if isRewindActive}}
+  {{#if (isRewindActive)}}
     <DNavigationItem
       @route="userActivity.rewind"
       @ariaCurrentContext="subNav"
