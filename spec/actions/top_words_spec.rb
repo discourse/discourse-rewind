@@ -3,7 +3,7 @@
 RSpec.describe DiscourseRewind::Action::TopWords do
   fab!(:date) { Date.new(2021).all_year }
   fab!(:user)
-  fab!(:other_user) { Fabricate(:user) }
+  fab!(:other_user, :user)
 
   fab!(:post1) do
     Fabricate(
