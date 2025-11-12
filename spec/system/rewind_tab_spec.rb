@@ -31,7 +31,7 @@ describe "DiscourseRewind | rewind tab", type: :system do
   context "when in november" do
     before { freeze_time DateTime.parse("2022-11-24") }
 
-    it "doesn show the tab" do
+    it "doesn't show the tab" do
       visit("/my/activity")
 
       expect(page).to have_no_selector(".user-nav__activity-rewind")

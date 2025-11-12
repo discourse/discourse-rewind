@@ -23,14 +23,14 @@ en:
           title: Most received reactions in topics
         fbff:
           title: Your FBFF (Forum Best Friend Forever)
-        favorite_categories:
+        most_viewed_categories:
           title:
-            one: Your favorite category
-            other: Your %{count} favorite categories
-        favorite_tags:
+            one: Your most viewed category
+            other: Your %{count} most viewed categories
+        most_viewed_tags:
           title:
-            one: Your favorite tag
-            other: Your %{count} favorite tags
+            one: Your most viewed tag
+            other: Your %{count} most viewed tags
         best_topics:
           title:
             one: Your best topic

@@ -4,17 +4,20 @@ import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import icon from "discourse/helpers/d-icon";
 import KeyValueStore from "discourse/lib/key-value-store";
-import isRewindActive from "discourse/plugins/discourse-rewind/discourse/lib/is-rewind-active";
 
-export default class RewindTab extends Component {
+export default class RewindCallout extends Component {
   @service router;
+  @service currentUser;
 
   store = new KeyValueStore("discourse_rewind_" + this.fetchYear);
 
   get showCallout() {
-    return isRewindActive() && !this.dismissed;
+    return this.currentUser?.is_rewind_active && !this.dismissed;
   }
 
+  // We want to show the previous year's rewind in January
+  // but the current year's rewind in any other month (in
+  // reality, only December).
   get fetchYear() {
     const currentDate = new Date();
     const currentMonth = currentDate.getMonth();

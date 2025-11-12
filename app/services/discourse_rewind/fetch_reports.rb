@@ -27,8 +27,8 @@ module DiscourseRewind
       Action::ReadingTime,
       Action::Reactions,
       Action::Fbff,
-      Action::FavoriteTags,
-      Action::FavoriteCategories,
+      Action::MostViewedTags,
+      Action::MostViewedCategories,
       Action::BestTopics,
       Action::BestPosts,
       Action::ActivityCalendar,
@@ -63,6 +63,8 @@ module DiscourseRewind
       when 12
         current_year
       else
+        # Otherwise it's impossible to test in browser unless you're
+        # in December or January
         if Rails.env.development?
           current_year
         else

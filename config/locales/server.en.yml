@@ -1,1 +1,3 @@
 en:
+  site_settings:
+    discourse_rewind_enabled: "Enable Discourse Rewind for a fun end-of-year summary for members' activity in the community."

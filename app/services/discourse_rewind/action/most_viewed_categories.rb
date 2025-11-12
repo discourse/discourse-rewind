@@ -3,7 +3,7 @@
 # Topics visited grouped by category
 module DiscourseRewind
   module Action
-    class FavoriteCategories < BaseReport
+    class MostViewedCategories < BaseReport
       FakeData = {
         data: [
           { category_id: 1, name: "cats" },
@@ -12,12 +12,12 @@ module DiscourseRewind
           { category_id: 4, name: "management" },
           { category_id: 5, name: "things" },
         ],
-        identifier: "favorite-categories",
+        identifier: "most-viewed-categories",
       }
       def call
         return FakeData if Rails.env.development?
 
-        favorite_categories =
+        most_viewed_categories =
           TopicViewItem
             .joins(:topic)
             .joins("INNER JOIN categories ON categories.id = topics.category_id")
@@ -30,7 +30,7 @@ module DiscourseRewind
             .pluck("categories.id, categories.name")
             .map { |category_id, name| { category_id: category_id, name: name } }
 
-        { data: favorite_categories, identifier: "favorite-categories" }
+        { data: most_viewed_categories, identifier: "most-viewed-categories" }
       end
     end
   end

@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 # name: discourse-rewind
-# about: TODO
-# meta_topic_id: TODO
+# about: A fun end-of-year summary for members' activity in the community.
+# meta_topic_id: https://meta.discourse.org/t/discourse-rewind-2024/348063
 # version: 0.0.1
 # authors: Discourse
-# url: TODO
+# url: https://github.com/discourse/discourse-rewind
 # required_version: 2.7.0
 
 enabled_site_setting :discourse_rewind_enabled
@@ -25,4 +25,8 @@ end
 
 require_relative "lib/discourse_rewind/engine"
 
-after_initialize {}
+after_initialize do
+  add_to_serializer(:current_user, :is_rewind_active) do
+    Date.today.month == 1 || Date.today.month == 12
+  end
+end
