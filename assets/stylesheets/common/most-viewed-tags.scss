@@ -39,6 +39,7 @@
 
     &:hover {
       background-color: var(--secondary-very-high);
+
       &::before {
         background-color: var(--secondary-very-high);
       }
