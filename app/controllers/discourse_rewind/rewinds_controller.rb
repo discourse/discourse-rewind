@@ -10,10 +10,7 @@ module ::DiscourseRewind
       DiscourseRewind::FetchReports.call(service_params) do
         on_model_not_found(:year) { raise Discourse::NotFound }
         on_model_not_found(:user) { raise Discourse::NotFound }
-        on_success do |reports:|
-          @reports = reports
-          render json: MultiJson.dump(reports), status: :ok
-        end
+        on_success { |reports:| render json: MultiJson.dump(reports), status: :ok }
       end
     end
   end

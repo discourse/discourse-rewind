@@ -13,8 +13,11 @@
     display: grid;
     grid-template-columns: 25px 50px 1fr;
     gap: 1em;
-    border-bottom: 1px solid var(--primary-low);
-    padding: 0.5em 0;
+    padding: 1em 0;
+
+    img.emoji {
+      vertical-align: baseline;
+    }
   }
 
   .emoji {
@@ -26,19 +29,20 @@
     font-weight: normal;
     font-display: var(--pixel-text);
     font-size: 16px;
+    color: #fff;
   }
 
   .rewind-reactions-bar {
-    background: var(--tertiary-600);
+    background: #fff;
     border: 1px solid rgb(var(--primary-rgb), 0.2);
     height: 25px;
-    border-radius: calc(var(--rewind-border-radius) * 0.75);
   }
 
   .rewind-total-reactions {
     font-size: 12px;
     font-weight: normal;
     margin-top: 1em;
-    margin-left: auto;
+    color: #00ff00;
+    text-align: start;
   }
 }

@@ -35,51 +35,79 @@
   height: 100vh;
   max-height: 100%;
   max-width: 960px;
-  border: 1px solid var(--primary);
-  border-radius: var(--rewind-border-radius);
+  border-radius: 30px;
   container-type: size;
   position: relative;
   overflow: hidden;
-  background: var(--secondary);
 
   @media (width <= 768px) {
     border: none;
     border-radius: 0;
   }
+
+  &::before,
+  &::after {
+    display: block;
+    pointer-events: none;
+    content: "";
+    position: absolute;
+  }
+
+  &:before {
+    width: 100%;
+    height: 2px;
+    z-index: 3;
+    background: rgba(0, 0, 0, 0.3);
+    opacity: 0.75;
+    animation: scanline 6s linear infinite;
+  }
+
+  &:after {
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 2;
+    background: linear-gradient(
+      to bottom,
+      transparent 50%,
+      rgba(0, 0, 0, 0.1) 51%
+    );
+    background-size: 100% 4px;
+    animation: scanlines 1s steps(60) infinite;
+  }
 }
 
-.background-1 {
-  background: absolute-image-url(
-    "/plugins/discourse-rewind/images/blur-bg.png"
-  );
-  background-size: contain;
-  position: absolute;
-  transform: translateY(0);
-  width: 100%;
-  height: 1000%;
-  opacity: 0.45;
+@keyframes scanline {
+  0% {
+    transform: translate3d(0, 200000%, 0);
+  }
+}
 
-  @if is-dark-color-scheme() {
-    opacity: 0.15;
+@keyframes scanlines {
+  0% {
+    background-position: 0 50%;
   }
 }
 
 .rewind__scroll-wrapper {
   overflow-y: auto;
   overflow-x: hidden;
+  background: #111;
   height: 100%;
   width: 100%;
   position: relative;
   display: flex;
   flex-direction: column;
   padding-bottom: var(--safe-area-inset-bottom);
+  padding-top: 2em;
 }
 
 .rewind__exit-fullscreen-btn {
   position: absolute;
   top: 20px;
   right: 20px;
-  z-index: 2;
+  z-index: 3;
 }
 
 .rewind__prev-btn {

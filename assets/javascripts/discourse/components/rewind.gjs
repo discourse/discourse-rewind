@@ -54,17 +54,6 @@ export default class Rewind extends Component {
   }
 
   @action
-  handleScroll({ target }) {
-    let children = this.rewindContainer.getElementsByClassName("parallax-bg");
-
-    for (let i = 0; i < children.length; i++) {
-      children[i].style.transform = `translateY(-${
-        (target.scrollTop * (i + 1)) / 5
-      }px)`;
-    }
-  }
-
-  @action
   registerRewindContainer(element) {
     this.rewindContainer = element;
   }
@@ -82,7 +71,6 @@ export default class Rewind extends Component {
     >
       <div class="rewind">
         <RewindHeader />
-        <div class="background-1 parallax-bg"></div>
         {{#if this.loadingRewind}}
           <div class="rewind-loader">
             <div class="spinner small"></div>
@@ -90,14 +78,13 @@ export default class Rewind extends Component {
           </div>
         {{else}}
           <DButton
-            class="rewind__exit-fullscreen-btn"
+            class="btn-default rewind__exit-fullscreen-btn"
             @icon={{if this.fullScreen "discourse-compress" "discourse-expand"}}
             @action={{this.toggleFullScreen}}
           />
           <div
             class="rewind__scroll-wrapper"
             {{didInsert this.registerScrollWrapper}}
-            {{on "scroll" this.handleScroll}}
           >
 
             {{#each this.rewind as |report|}}

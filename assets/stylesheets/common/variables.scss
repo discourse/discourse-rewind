@@ -13,11 +13,6 @@
 }
 
 @mixin rewind-border() {
-  border: 2px solid var(--primary);
+  border: 2px solid #00ff00;
   border-radius: var(--rewind-border-radius);
-  box-shadow: 4px 4px 0 0 rgb(var(--primary-rgb), 0.25);
-
-  @if is-dark-color-scheme() {
-    box-shadow: 0 4px 5px -2px rgb(var(--secondary-rgb), 0.5);
-  }
 }

@@ -24,7 +24,7 @@ p.reading-time__text {
 }
 
 .reading-time code {
-  background-color: rgb(var(--primary-rgb), 0.15);
+  background-color: #fff;
 }
 
 .book img {
@@ -37,6 +37,7 @@ p.reading-time__text {
   background-color: #01060f;
   border-radius: 0 5px 5px 0;
   box-shadow: 5px 5px 20px rgb(var(--primary-rgb), 0.05);
+  image-rendering: crisp-edges;
 
   @media screen and (width <= 475px) {
     width: 100px;
@@ -103,6 +104,7 @@ p.reading-time__text {
 }
 
 .reading-time__text {
+  color: #fff;
   font-weight: normal;
   width: 50%;
 
@@ -117,7 +119,6 @@ p.reading-time__text {
   flex-direction: row;
   justify-content: space-around;
   align-items: center;
-  background-color: var(--secondary);
 
   --book-color: var(--primary-very-high);
 
