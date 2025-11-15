@@ -32,8 +32,6 @@
   .rewind-calendar-cell {
     height: 10px;
     width: 10px;
-    border-radius: calc(var(--rewind-border-radius) / 2);
-    border: 1px solid rgb(var(--primary-rgb), 0.2);
 
     @media screen and (width <= 475px) {
       height: 5px;
@@ -45,15 +43,15 @@
     }
 
     &.-low {
-      background: var(--tertiary-low);
+      background: var(--success);
     }
 
     &.-medium {
-      background: var(--tertiary-medium);
+      background: var(--success-medium);
     }
 
     &.-high {
-      background: var(--tertiary-high);
+      background: var(--success-low);
     }
   }
 }
