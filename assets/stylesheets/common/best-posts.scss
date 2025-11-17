@@ -3,6 +3,11 @@
     display: grid;
     grid-template-columns: repeat(3, calc(32% - (1em / 3)));
     gap: 1em;
+
+    @media screen and (width <= 580px) {
+      padding: 1em;
+      grid-template-columns: 1fr;
+    }
   }
 
   .rewind-report-title {
@@ -18,13 +23,17 @@
     box-sizing: border-box;
     padding: 0.5em;
     position: relative;
-    color: var(--primary);
+    color: var(--rewind-black);
     display: flex;
     flex-direction: column;
     text-align: left;
     max-width: 700px;
     height: 100%;
-    background: linear-gradient(225deg, transparent 13px, #ffffff 13px);
+    background: linear-gradient(
+      225deg,
+      transparent 13px,
+      var(--rewind-white) 13px
+    );
 
     &::before {
       content: "";
@@ -34,11 +43,11 @@
       top: -1px;
       right: -1px;
       border: 10px solid transparent;
-      border-left: 10px solid #ffffff;
-      border-bottom: 10px solid #ffffff;
+      border-left: 10px solid var(--rewind-white);
+      border-bottom: 10px solid var(--rewind-white);
       box-shadow:
-        0px 2px 4px rgba(0, 0, 0, 0.4),
-        -1px 1px 4px rgba(0, 0, 0, 0.4);
+        0 2px 4px rgb(0 0 0 / 0.4),
+        -1px 1px 4px rgb(0 0 0 / 0.4);
     }
 
     &.rank-1 {
@@ -83,10 +92,10 @@
   .best-posts__post p {
     font-family: var(--pixel-text) !important;
     font-weight: normal;
-    font-size: var(--font-down-);
+    font-size: var(--font-down-2);
     width: 100%;
     text-align: left;
-    color: var(--primary-800);
+    color: var(--rewind-grey);
 
     @media screen and (width <= 475px) {
       font-size: var(--font-down-2);
@@ -125,7 +134,8 @@
   .best-posts__metadata a {
     font-family: var(--pixel-text);
     text-transform: uppercase;
-    color: var(--primary);
+    color: var(--rewind-blue);
+    text-decoration: underline;
   }
 
   .best-posts__metadata {
@@ -142,7 +152,7 @@
   .best-posts__likes,
   .best-posts__replies {
     font-family: var(--pixel-text);
-    border: 1px solid var(--primary-200);
+    border: 1px solid var(--rewind-light-grey);
     padding: 3px 8px;
     border-radius: var(--rewind-border-radius);
     display: flex;

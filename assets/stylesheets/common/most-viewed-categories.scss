@@ -19,30 +19,6 @@
     width: max-content;
     flex-grow: 1;
     position: relative;
-    min-width: 150px;
-    margin-top: 1.5em;
-
-    &::before {
-      display: block;
-      content: "";
-      width: 3em;
-      height: 1em;
-      border: 2px solid #00ff00;
-      border-bottom: none;
-      border-radius: 6px 6px 0 0;
-      position: absolute;
-      top: calc(-1em - 2px);
-      left: -2px;
-      background: #111;
-    }
-
-    &:hover {
-      background-color: var(--secondary-very-high);
-
-      &::before {
-        background-color: var(--secondary-very-high);
-      }
-    }
   }
 }
 

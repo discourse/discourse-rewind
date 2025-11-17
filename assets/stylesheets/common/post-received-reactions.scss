@@ -31,7 +31,7 @@
     animation-iteration-count: infinite;
     animation-timing-function: ease-in-out;
     z-index: 1;
-    color: #fff;
+    color: var(--rewind-white);
     border: none;
 
     .emoji {

@@ -9,6 +9,7 @@ en:
       placeholder: Discourse Rewind
       title: Rewind
       year: "2025"
+      loading: "Reticulating splines..."
       reports:
         activity_calendar:
           title: Activity Calendar

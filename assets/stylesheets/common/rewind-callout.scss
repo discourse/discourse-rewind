@@ -41,19 +41,24 @@
   position: relative;
   display: inline-block;
   transition: transform 200ms ease;
+
+  .btn.no-text.--special-kbd {
+    top: 0.75em;
+    right: 1em;
+    font-size: var(--font-down-3);
+  }
 }
 
-/* Top face */
 .rewind-callout::before {
   content: "";
   background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0    287.46 22.28"><path d="m0 0 64.78 22.28h44.53L44.54 0z" style="fill:%23d0232b"/><path d="m44.54    0 64.77 22.28h44.54L89.08 0z" style="fill:%23f15e24"/><path d="m89.08 0 64.77    22.28h44.54L133.61 0z" style="fill:%23fdf6b0"/><path d="m133.61 0 64.78 22.28h44.54L178.15 0z"    style="fill:%230ea94e"/><path d="m178.15 0 64.78 22.28h44.53L222.69 0z"    style="fill:%232bace2"/></svg>');
   background-repeat: no-repeat;
-  background-position: 55% 100%;
+  background-position: 47% 100%;
   background-size: 139px;
   background-blend-mode: multiply;
   position: absolute;
   left: -48px;
-  top: -16px;
+  top: -15px;
   z-index: -1;
   width: 100%;
   height: 16px;
@@ -65,15 +70,14 @@
     width 200ms ease;
 }
 
-/* Left face */
 .rewind-callout::after {
   content: "";
   position: absolute;
   left: -10px;
-  top: -4px;
+  top: -5px;
   z-index: -1;
   width: 10px;
-  height: calc(100% - 3px);
+  height: calc(100% - 22px);
   background-color: #e8e5d0;
   transform: skew(0deg, 41deg) scale3d(1, 1, 1);
 }

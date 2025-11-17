@@ -166,7 +166,7 @@
 
   .rewind-card.-back {
     transform: rotateY(180deg);
-    background-color: #fff;
+    background-color: var(--rewind-white);
   }
 
   .rewind-card.-front,
@@ -179,7 +179,6 @@
 
   .rewind-card.-front {
     background-size: cover;
-
     padding: 0.5em;
   }
 

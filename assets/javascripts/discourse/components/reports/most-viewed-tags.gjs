@@ -10,11 +10,17 @@ const MostViewedTags = <template>
         }}</h2>
       <div class="rewind-report-container">
         {{#each @report.data as |data|}}
-          <a class="rewind-card" href={{concat "/tag/" data.name}}>
-            <p
-              class="most-viewed-tags__tag"
-              href={{concat "/tag/" data.name}}
-            >#{{data.name}}</p>
+          <a class="folder-wrapper" href={{concat "/tag/" data.name}}>
+            <span class="folder-tab"></span>
+            <div class="rewind-card">
+              <p
+                class="most-viewed-tags__tag"
+                href={{concat "/tag/" data.name}}
+              >
+                #{{data.name}}
+              </p>
+            </div>
+            <span class="folder-bg"></span>
           </a>
         {{/each}}
       </div>
