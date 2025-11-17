@@ -65,7 +65,7 @@
     animation: scanline 6s linear infinite;
   }
 
-  &:after {
+  &::after {
     top: 0;
     right: 0;
     bottom: 0;
