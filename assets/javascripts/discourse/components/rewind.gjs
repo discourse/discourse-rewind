@@ -8,6 +8,7 @@ import concatClass from "discourse/helpers/concat-class";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { eq } from "discourse/truth-helpers";
+import { i18n } from "discourse-i18n";
 import ActivityCalendar from "discourse/plugins/discourse-rewind/discourse/components/reports/activity-calendar";
 import BestPosts from "discourse/plugins/discourse-rewind/discourse/components/reports/best-posts";
 import BestTopics from "discourse/plugins/discourse-rewind/discourse/components/reports/best-topics";
@@ -18,7 +19,6 @@ import MostViewedTags from "discourse/plugins/discourse-rewind/discourse/compone
 import Reactions from "discourse/plugins/discourse-rewind/discourse/components/reports/reactions";
 import ReadingTime from "discourse/plugins/discourse-rewind/discourse/components/reports/reading-time";
 import TopWords from "discourse/plugins/discourse-rewind/discourse/components/reports/top-words";
-import { i18n } from "discourse-i18n";
 
 export default class Rewind extends Component {
   @tracked rewind = [];
