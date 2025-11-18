@@ -15,6 +15,7 @@ RSpec.describe DiscourseRewind::RewindsController do
         get "/rewinds.json"
 
         expect(response.status).to eq(404)
+        expect(response.parsed_body["errors"].first).to eq(I18n.t("discourse_rewind.invalid_year"))
       end
     end
 
@@ -25,6 +26,21 @@ RSpec.describe DiscourseRewind::RewindsController do
         get "/rewinds.json"
 
         expect(response.status).to eq(200)
+      end
+
+      context "when reports are not found or error" do
+        before do
+          DiscourseRewind::Action::TopWords.stubs(:call).raises(StandardError.new("Some error"))
+        end
+
+        it "returns 404 with message" do
+          get "/rewinds.json"
+
+          expect(response.status).to eq(404)
+          expect(response.parsed_body["errors"].first).to eq(
+            I18n.t("discourse_rewind.report_failed"),
+          )
+        end
       end
     end
   end

@@ -14,7 +14,7 @@ const MostViewedCategories = <template>
             <p
               class="most-viewed-categories__category"
               href={{concat "/c/-/" data.category_id}}
-            >{{data.name}}</p>
+            >#{{data.name}}</p>
           </a>
         {{/each}}
       </div>

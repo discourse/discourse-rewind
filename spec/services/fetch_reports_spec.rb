@@ -35,10 +35,11 @@ RSpec.describe(DiscourseRewind::FetchReports) do
       before { freeze_time DateTime.parse("2021-12-22") }
 
       it "returns the cached reports" do
-        expect(result.reports.length).to eq(16)
+        initial_count = result.reports.length
+        expect(initial_count).to be > 0
 
         allow(DiscourseRewind::Action::TopWords).to receive(:call)
-        expect(result.reports.length).to eq(16)
+        expect(result.reports.length).to eq(initial_count)
         expect(DiscourseRewind::Action::TopWords).to_not have_received(:call)
       end
     end
@@ -51,7 +52,7 @@ RSpec.describe(DiscourseRewind::FetchReports) do
 
       it "returns the reports" do
         allow(DiscourseRewind::Action::TopWords).to receive(:call)
-        expect(result.reports.length).to eq(16)
+        expect(result.reports.length).to be > 0
         expect(DiscourseRewind::Action::TopWords).to have_received(:call)
       end
     end

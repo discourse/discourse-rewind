@@ -41,15 +41,10 @@ module DiscourseRewind
     ]
 
     model :year
-    model :user
     model :date
     model :reports
 
     private
-
-    def fetch_user(guardian:)
-      User.find_by_username(guardian.user.username)
-    end
 
     def fetch_year
       current_date = Time.zone.now
@@ -76,12 +71,13 @@ module DiscourseRewind
       Date.new(year).all_year
     end
 
-    def fetch_reports(date:, user:, guardian:, year:)
+    def fetch_reports(date:, guardian:, year:)
       key = "rewind:#{guardian.user.username}:#{year}"
       reports = Discourse.redis.get(key)
 
       if !reports
-        reports = REPORTS.map { |report| report.call(date:, user:, guardian:) }
+        reports =
+          REPORTS.map { |report| report.call(date:, user: guardian.user, guardian:) }.compact
         Discourse.redis.setex(key, CACHE_DURATION, MultiJson.dump(reports))
       else
         reports = MultiJson.load(reports, symbolize_keys: true)

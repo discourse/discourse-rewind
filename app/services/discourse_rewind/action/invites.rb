@@ -13,7 +13,7 @@ module DiscourseRewind
         return if total_invites == 0
 
         # Redeemed invites (users who actually joined)
-        redeemed_count = invites.where.not(redeemed_at: nil).count
+        redeemed_count = invites.where("redemption_count > 0").count
 
         # Get the users who were invited (via InvitedUser or redeemed invites)
         invited_user_ids = InvitedUser.where(invite: invites).pluck(:user_id).compact
@@ -22,11 +22,7 @@ module DiscourseRewind
 
         # Calculate impact of invitees
         invitee_post_count =
-          Post
-            .where(user_id: invited_user_ids)
-            .where(created_at: date)
-            .where(deleted_at: nil)
-            .count
+          Post.where(user_id: invited_user_ids).where(created_at: date).where(deleted_at: nil).count
 
         invitee_topic_count =
           Topic

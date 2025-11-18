@@ -27,6 +27,6 @@ require_relative "lib/discourse_rewind/engine"
 
 after_initialize do
   add_to_serializer(:current_user, :is_rewind_active) do
-    Date.today.month == 1 || Date.today.month == 12
+    Rails.env.development? || Date.today.month == 1 || Date.today.month == 12
   end
 end
