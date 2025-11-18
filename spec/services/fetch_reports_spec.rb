@@ -31,6 +31,17 @@ RSpec.describe(DiscourseRewind::FetchReports) do
       it { is_expected.to fail_to_find_a_model(:year) }
     end
 
+    context "in development mode" do
+      before do
+        Rails.env.stubs(:development?).returns(true)
+        freeze_time DateTime.parse("2021-06-22")
+      end
+
+      it "finds the year no matter what month" do
+        expect(result.year).to eq(2021)
+      end
+    end
+
     context "when reports is cached" do
       before { freeze_time DateTime.parse("2021-12-22") }
 
