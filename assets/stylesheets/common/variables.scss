@@ -10,14 +10,18 @@
   --d-orange-dark: 188, 105, 65;
   --d-red-dark: 183, 64, 70;
   --rewind-border-radius: 4px;
+  --rewind-green: #0f0;
+  --rewind-blue: #00f;
+  --rewind-black: #111;
+  --rewind-white: #fff;
+  --rewind-magenta: #f0f;
+  --rewind-grey: #555;
+  --rewind-light-grey: #aaa;
+  --rewind-yellow: rgb(237, 237, 84);
+  --rewind-beige: #fbf8e4;
 }
 
 @mixin rewind-border() {
-  border: 2px solid var(--primary);
+  border: 2px solid var(--rewind-green);
   border-radius: var(--rewind-border-radius);
-  box-shadow: 4px 4px 0 0 rgb(var(--primary-rgb), 0.25);
-
-  @if is-dark-color-scheme() {
-    box-shadow: 0 4px 5px -2px rgb(var(--secondary-rgb), 0.5);
-  }
 }

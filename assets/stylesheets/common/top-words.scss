@@ -3,6 +3,16 @@
   background-color: transparent;
   width: 100%;
   flex-direction: column;
+  margin-bottom: 1em;
+
+  .rewind-report-title {
+    box-sizing: border-box;
+    width: 100%;
+    text-align: center;
+    margin-left: 0;
+    border: none !important;
+    margin-bottom: 1em;
+  }
 }
 
 .cards-container {
@@ -75,6 +85,36 @@
     height: 125px;
   }
 
+  &:nth-child(1) {
+    .-front {
+      background-image: url("/plugins/discourse-rewind/images/cards/01-robot.gif");
+    }
+  }
+
+  &:nth-child(2) {
+    .-front {
+      background-image: url("/plugins/discourse-rewind/images/cards/07-beach.gif");
+    }
+  }
+
+  &:nth-child(3) {
+    .-front {
+      background-image: url("/plugins/discourse-rewind/images/cards/02-castle.gif");
+    }
+  }
+
+  &:nth-child(4) {
+    .-front {
+      background-image: url("/plugins/discourse-rewind/images/cards/06-nature.gif");
+    }
+  }
+
+  &:nth-child(5) {
+    .-front {
+      background-image: url("/plugins/discourse-rewind/images/cards/04-hand.gif");
+    }
+  }
+
   .rewind-card {
     box-shadow: 0 0 0 4px rgb(var(--mystery-color-light), 1);
     border: none;
@@ -126,6 +166,7 @@
 
   .rewind-card.-back {
     transform: rotateY(180deg);
+    background-color: var(--rewind-white);
   }
 
   .rewind-card.-front,
@@ -137,24 +178,8 @@
   }
 
   .rewind-card.-front {
+    background-size: cover;
     padding: 0.5em;
-    display: grid;
-    grid-template:
-      "tl .  . " 1fr
-      ".  .  . " 1fr
-      ".  cr . " 3fr
-      ".  .  . " 1fr
-      ".  .  br" 1fr
-      / 1fr 3fr 1fr;
-    background:
-      radial-gradient(
-          circle at 4px 4px,
-          var(--primary-100) 1px,
-          var(--secondary) 1px,
-          var(--secondary) 6px
-        )
-        0 0 / 6px 6px,
-      var(--secondary-low);
   }
 
   &.-long-word .rewind-card__title {

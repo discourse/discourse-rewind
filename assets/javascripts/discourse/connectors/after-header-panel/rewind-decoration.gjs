@@ -28,7 +28,10 @@ export default class AvatarDecorator extends Component {
   }
 
   get showDecorator() {
-    return this.currentUser?.is_rewind_active && !this.dismissed;
+    return (
+      this.currentUser?.is_development_env ||
+      (this.currentUser?.is_rewind_active && !this.dismissed)
+    );
   }
 
   <template>

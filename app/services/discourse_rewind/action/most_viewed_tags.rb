@@ -10,7 +10,6 @@ module DiscourseRewind
           { tag_id: 2, name: "dogs" },
           { tag_id: 3, name: "countries" },
           { tag_id: 4, name: "management" },
-          { tag_id: 5, name: "things" },
         ],
         identifier: "most-viewed-tags",
       }
@@ -28,7 +27,7 @@ module DiscourseRewind
             .where(tags: { id: Tag.visible(user.guardian).pluck(:id) })
             .group("tags.id, tags.name")
             .order("COUNT(DISTINCT topic_views.topic_id) DESC")
-            .limit(5)
+            .limit(4)
             .pluck("tags.id, tags.name")
             .map { |tag_id, name| { tag_id: tag_id, name: name } }
 
