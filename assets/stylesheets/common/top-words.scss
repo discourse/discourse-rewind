@@ -85,44 +85,9 @@
     height: 125px;
   }
 
-  &:nth-child(1) {
-    .-front {
-      background-image: url("/plugins/discourse-rewind/images/cards/01-robot.gif");
-    }
-  }
-
-  &:nth-child(2) {
-    .-front {
-      background-image: url("/plugins/discourse-rewind/images/cards/07-beach.gif");
-    }
-  }
-
-  &:nth-child(3) {
-    .-front {
-      background-image: url("/plugins/discourse-rewind/images/cards/02-castle.gif");
-    }
-  }
-
-  &:nth-child(4) {
-    .-front {
-      background-image: url("/plugins/discourse-rewind/images/cards/06-nature.gif");
-    }
-  }
-
-  &:nth-child(5) {
-    .-front {
-      background-image: url("/plugins/discourse-rewind/images/cards/04-hand.gif");
-    }
-  }
-
   .rewind-card {
     box-shadow: 0 0 0 4px rgb(var(--mystery-color-light), 1);
     border: none;
-
-    @if is-dark-color-scheme() {
-      background-color: var(--primary-200);
-      box-shadow: 0 0 0 4px rgb(var(--mystery-color-dark), 1);
-    }
   }
 
   .rewind-card__inner {
@@ -164,9 +129,31 @@
     }
   }
 
+  .rewind-card.-front {
+    padding: 0.5em;
+    display: grid;
+    grid-template:
+      "tl .  . " 1fr
+      ".  .  . " 1fr
+      ".  cr . " 3fr
+      ".  .  . " 1fr
+      ".  .  br" 1fr
+      / 1fr 3fr 1fr;
+    background:
+      radial-gradient(
+          circle at 4px 4px,
+          rgb(0 0 0 / 0.05) 1px,
+          var(--rewind-white) 1px,
+          var(--rewind-white) 6px
+        )
+        0 0 / 6px 6px,
+      var(--rewind-white);
+  }
+
   .rewind-card.-back {
     transform: rotateY(180deg);
     background-color: var(--rewind-white);
+    color: var(--rewind-black);
   }
 
   .rewind-card.-front,
@@ -175,11 +162,6 @@
     width: 100%;
     height: 100%; /* Safari */
     backface-visibility: hidden;
-  }
-
-  .rewind-card.-front {
-    background-size: cover;
-    padding: 0.5em;
   }
 
   &.-long-word .rewind-card__title {
@@ -193,6 +175,11 @@
   .rewind-card__title {
     overflow-wrap: anywhere;
     hyphens: auto;
+    line-height: 1;
+  }
+
+  .rewind-card__data {
+    margin-top: 0.5em;
   }
 
   .rewind-card__image {
