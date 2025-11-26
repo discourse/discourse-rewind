@@ -10,7 +10,46 @@ module DiscourseRewind
       NIGHT_OWL_THRESHOLD_PM = 22..23
       NIGHT_OWL_THRESHOLD_AM = 0..2
 
+      FakeData = {
+        data: {
+          activity_by_hour: {
+            0 => 12,
+            1 => 8,
+            2 => 5,
+            3 => 2,
+            4 => 1,
+            5 => 3,
+            6 => 8,
+            7 => 15,
+            8 => 25,
+            9 => 32,
+            10 => 28,
+            11 => 24,
+            12 => 22,
+            13 => 20,
+            14 => 26,
+            15 => 30,
+            16 => 28,
+            17 => 22,
+            18 => 18,
+            19 => 16,
+            20 => 14,
+            21 => 18,
+            22 => 22,
+            23 => 15,
+          },
+          most_active_hour: 9,
+          personality: {
+            type: "early_bird",
+            percentage: 28.5,
+          },
+          total_activities: 414,
+        },
+        identifier: "time-of-day-activity",
+      }
+
       def call
+        return FakeData if Rails.env.development?
         # Get activity by hour of day (in user's timezone)
         activity_by_hour = get_activity_by_hour
 

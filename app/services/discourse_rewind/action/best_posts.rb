@@ -3,7 +3,37 @@
 module DiscourseRewind
   module Action
     class BestPosts < BaseReport
+      FakeData = {
+        data: [
+          {
+            post_number: 5,
+            topic_id: 42,
+            like_count: 23,
+            reply_count: 8,
+            excerpt: "This is a great explanation of how ActiveRecord works under the hood...",
+          },
+          {
+            post_number: 12,
+            topic_id: 89,
+            like_count: 19,
+            reply_count: 5,
+            excerpt:
+              "Here's a comprehensive guide to testing Rails applications with RSpec and system tests...",
+          },
+          {
+            post_number: 3,
+            topic_id: 156,
+            like_count: 15,
+            reply_count: 12,
+            excerpt:
+              "The key to understanding PostgreSQL performance is looking at your query plans...",
+          },
+        ],
+        identifier: "best-posts",
+      }
+
       def call
+        return FakeData if Rails.env.development?
         best_posts =
           Post
             .where(user_id: user.id)

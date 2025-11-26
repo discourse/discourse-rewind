@@ -5,7 +5,21 @@
 module DiscourseRewind
   module Action
     class NewUserInteractions < BaseReport
+      FakeData = {
+        data: {
+          total_interactions: 127,
+          likes_given: 45,
+          replies_to_new_users: 62,
+          mentions_to_new_users: 20,
+          topics_with_new_users: 8,
+          unique_new_users: 24,
+          new_users_count: 156,
+        },
+        identifier: "new-user-interactions",
+      }
+
       def call
+        return FakeData if Rails.env.development?
         year_start = Date.new(date.first.year, 1, 1)
 
         # Find users who created accounts this year

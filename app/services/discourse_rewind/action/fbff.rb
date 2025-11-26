@@ -9,7 +9,26 @@ module DiscourseRewind
       LIKE_SCORE = 1
       REPLY_SCORE = 10
 
+      FakeData = {
+        data: {
+          fbff: {
+            id: 2,
+            username: "codingpal",
+            name: "Coding Pal",
+            avatar_template: "/letter_avatar_proxy/v4/letter/c/3be4f8/{size}.png",
+          },
+          yourself: {
+            id: 1,
+            username: "you",
+            name: "You",
+            avatar_template: "/letter_avatar_proxy/v4/letter/y/f05b48/{size}.png",
+          },
+        },
+        identifier: "fbff",
+      }
+
       def call
+        return FakeData if Rails.env.development?
         most_liked_users =
           like_query(date)
             .where(acting_user_id: user.id)
