@@ -8,11 +8,11 @@ import emoji from "discourse/helpers/emoji";
 import discourseLater from "discourse/lib/later";
 
 const MYSTERY_EMOJIS = [
-  "mag", // 🔍
-  "question", // ❓
-  "8ball", // 🎱
-  "crystal_ball", // 🔮
-  "crescent_moon", // 🌙
+  "floppy_disk",
+  "videocassette",
+  "computer_disk",
+  "pager",
+  "fax",
 ];
 
 const BACKGROUND_COLORS = [

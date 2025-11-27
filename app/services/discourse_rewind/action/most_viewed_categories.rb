@@ -10,7 +10,6 @@ module DiscourseRewind
           { category_id: 2, name: "dogs" },
           { category_id: 3, name: "countries" },
           { category_id: 4, name: "management" },
-          { category_id: 5, name: "things" },
         ],
         identifier: "most-viewed-categories",
       }
@@ -26,7 +25,7 @@ module DiscourseRewind
             .where(categories: { id: user.guardian.allowed_category_ids })
             .group("categories.id, categories.name")
             .order("COUNT(*) DESC")
-            .limit(5)
+            .limit(4)
             .pluck("categories.id, categories.name")
             .map { |category_id, name| { category_id: category_id, name: name } }
 

@@ -5,7 +5,27 @@
 module DiscourseRewind
   module Action
     class Invites < BaseReport
+      FakeData = {
+        data: {
+          total_invites: 18,
+          redeemed_count: 12,
+          redemption_rate: 66.7,
+          invitee_post_count: 145,
+          invitee_topic_count: 23,
+          invitee_like_count: 89,
+          avg_trust_level: 1.8,
+          most_active_invitee: {
+            id: 42,
+            username: "newbie_123",
+            name: "New User",
+            avatar_template: "/letter_avatar_proxy/v4/letter/n/8c91d9/{size}.png",
+          },
+        },
+        identifier: "invites",
+      }
+
       def call
+        return FakeData if Rails.env.development?
         # Get all invites created by this user in the date range
         invites = Invite.where(invited_by_id: user.id).where(created_at: date)
 
@@ -13,7 +33,7 @@ module DiscourseRewind
         return if total_invites == 0
 
         # Redeemed invites (users who actually joined)
-        redeemed_count = invites.where.not(redeemed_at: nil).count
+        redeemed_count = invites.where("redemption_count > 0").count
 
         # Get the users who were invited (via InvitedUser or redeemed invites)
         invited_user_ids = InvitedUser.where(invite: invites).pluck(:user_id).compact
@@ -22,11 +42,7 @@ module DiscourseRewind
 
         # Calculate impact of invitees
         invitee_post_count =
-          Post
-            .where(user_id: invited_user_ids)
-            .where(created_at: date)
-            .where(deleted_at: nil)
-            .count
+          Post.where(user_id: invited_user_ids).where(created_at: date).where(deleted_at: nil).count
 
         invitee_topic_count =
           Topic

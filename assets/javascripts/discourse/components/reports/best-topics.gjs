@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
 import { htmlSafe } from "@ember/template";
 import concatClass from "discourse/helpers/concat-class";
+import replaceEmoji from "discourse/helpers/replace-emoji";
 import getURL from "discourse/lib/get-url";
 import { i18n } from "discourse-i18n";
 
@@ -29,9 +30,9 @@ export default class BestTopics extends Component {
                 <span class="best-topics -rank"></span>
                 <span class="best-topics -rank"></span>
                 <h2 class="best-topics__header">{{topic.title}}</h2>
-                <span class="best-topics__excerpt">
-                  {{htmlSafe topic.excerpt}}
-                </span>
+                <span class="best-topics__excerpt">{{replaceEmoji
+                    (htmlSafe topic.excerpt)
+                  }}</span>
               </a>
             {{/each}}
           </div>

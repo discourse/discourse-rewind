@@ -9,8 +9,14 @@
     }
   }
 
+  .rewind-report-title {
+    border: none;
+    width: 100%;
+    text-align: center;
+    margin: 0 0 0 -1em;
+  }
+
   .rewind-card {
-    background: var(--secondary);
     flex-direction: row;
     gap: 0.5em;
     height: min-content;
@@ -25,12 +31,14 @@
     animation-iteration-count: infinite;
     animation-timing-function: ease-in-out;
     z-index: 1;
-
-    @include rewind-border;
+    color: var(--rewind-white);
+    border: none;
 
     .emoji {
       width: 30px;
       height: 30px;
+      image-rendering: crisp-edges;
+      transform: scale(1);
     }
   }
 

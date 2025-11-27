@@ -25,6 +25,16 @@
 }
 
 .rewind-report-title {
+  align-self: start;
+  padding: 0.25em 1em 0.25em;
+  margin-bottom: -2px;
+  background: #111;
+  margin-left: 0;
+  position: relative;
   font-size: var(--font-down-1);
   text-align: left;
+  border-radius: 4px 4px 0 0;
+  border-top: 2px solid var(--rewind-green);
+  border-left: 2px solid var(--rewind-green);
+  border-right: 2px solid var(--rewind-green);
 }

@@ -5,7 +5,27 @@
 module DiscourseRewind
   module Action
     class ChatUsage < BaseReport
+      FakeData = {
+        data: {
+          total_messages: 342,
+          favorite_channels: [
+            { channel_id: 1, channel_name: "general", message_count: 156 },
+            { channel_id: 2, channel_name: "tech-talk", message_count: 89 },
+            { channel_id: 3, channel_name: "random", message_count: 45 },
+            { channel_id: 4, channel_name: "dev", message_count: 32 },
+            { channel_id: 5, channel_name: "announcements", message_count: 12 },
+          ],
+          dm_message_count: 87,
+          unique_dm_channels: 12,
+          messages_with_reactions: 42,
+          total_reactions_received: 156,
+          avg_message_length: 78.5,
+        },
+        identifier: "chat-usage",
+      }
+
       def call
+        return FakeData if Rails.env.development?
         return if !enabled?
 
         messages =

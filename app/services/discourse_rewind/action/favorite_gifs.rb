@@ -15,7 +15,47 @@ module DiscourseRewind
         }ix
       MAX_RESULTS = 5
 
+      FakeData = {
+        data: {
+          favorite_gifs: [
+            {
+              url: "https://media.giphy.com/media/111ebonMs90YLu/giphy.gif",
+              usage_count: 12,
+              likes: 45,
+              reactions: 23,
+            },
+            {
+              url: "https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif",
+              usage_count: 8,
+              likes: 32,
+              reactions: 18,
+            },
+            {
+              url: "https://media1.tenor.com/m/XnODae53zvYAAAAd/joke-stickfigure.gif",
+              usage_count: 7,
+              likes: 28,
+              reactions: 15,
+            },
+            {
+              url: "https://c.tenor.com/tX_T48A14BwAAAAd/khaby-really.gif",
+              usage_count: 5,
+              likes: 20,
+              reactions: 12,
+            },
+            {
+              url: "https://media.giphy.com/media/3oriO0OEd9QIDdllqo/giphy.gif",
+              usage_count: 4,
+              likes: 15,
+              reactions: 8,
+            },
+          ],
+          total_gif_usage: 36,
+        },
+        identifier: "favorite-gifs",
+      }
+
       def call
+        return FakeData if Rails.env.development?
         gif_data = {}
 
         # Get GIFs from posts

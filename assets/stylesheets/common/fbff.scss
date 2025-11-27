@@ -9,11 +9,18 @@
     --border-size: 3px;
   }
 
+  .rewind-report-title {
+    width: 100%;
+    text-align: center;
+    border: none;
+    margin: 0;
+    box-sizing: border-box;
+  }
+
   .rewind-card {
     display: grid;
-    grid-template-columns: 1fr 400px 1fr;
-
-    @include rewind-border;
+    grid-template-columns: 100px 1fr 100px;
+    border: none;
 
     @media screen and (width <= 625px) {
       grid-template-columns: 1fr 1fr 1fr;
@@ -78,10 +85,13 @@
     margin: 0;
     align-self: center;
     justify-self: center;
-    margin-top: auto;
     height: min-content;
     font-size: var(--font-down-1);
     font-family: "Pixelify Sans", sans-serif;
+    color: var(--rewind-magenta);
+    margin-top: 0.5em;
+    line-height: 1;
+    word-wrap: anywhere;
 
     @media screen and (width <= 475px) {
       font-size: var(--font-down-3);

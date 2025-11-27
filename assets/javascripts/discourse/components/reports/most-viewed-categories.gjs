@@ -10,11 +10,12 @@ const MostViewedCategories = <template>
         }}</h2>
       <div class="rewind-report-container">
         {{#each @report.data as |data|}}
-          <a href={{concat "/c/-/" data.category_id}} class="rewind-card">
-            <p
-              class="most-viewed-categories__category"
-              href={{concat "/c/-/" data.category_id}}
-            >{{data.name}}</p>
+          <a class="folder-wrapper" href={{concat "/c/-/" data.category_id}}>
+            <span class="folder-tab"></span>
+            <div class="rewind-card">
+              <p class="most-viewed-categories__category">#{{data.name}}</p>
+            </div>
+            <span class="folder-bg"></span>
           </a>
         {{/each}}
       </div>

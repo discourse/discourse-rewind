@@ -3,11 +3,12 @@ import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import { eq } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { eq } from "discourse/truth-helpers";
+import { i18n } from "discourse-i18n";
 import ActivityCalendar from "discourse/plugins/discourse-rewind/discourse/components/reports/activity-calendar";
 import BestPosts from "discourse/plugins/discourse-rewind/discourse/components/reports/best-posts";
 import BestTopics from "discourse/plugins/discourse-rewind/discourse/components/reports/best-topics";
@@ -54,13 +55,9 @@ export default class Rewind extends Component {
   }
 
   @action
-  handleScroll({ target }) {
-    let children = this.rewindContainer.getElementsByClassName("parallax-bg");
-
-    for (let i = 0; i < children.length; i++) {
-      children[i].style.transform = `translateY(-${
-        (target.scrollTop * (i + 1)) / 5
-      }px)`;
+  handleBackdropClick(event) {
+    if (this.fullScreen && event.target === event.currentTarget) {
+      this.fullScreen = false;
     }
   }
 
@@ -77,27 +74,28 @@ export default class Rewind extends Component {
       }}
       {{didInsert this.loadRewind}}
       {{on "keydown" this.handleEscape}}
+      {{on "click" this.handleBackdropClick}}
       {{didInsert this.registerRewindContainer}}
       tabindex="0"
     >
       <div class="rewind">
         <RewindHeader />
-        <div class="background-1 parallax-bg"></div>
         {{#if this.loadingRewind}}
           <div class="rewind-loader">
             <div class="spinner small"></div>
-            <div class="rewind-loader__text">Crunching your data...</div>
+            <div class="rewind-loader__text">
+              {{i18n "discourse_rewind.loading"}}
+            </div>
           </div>
         {{else}}
           <DButton
-            class="rewind__exit-fullscreen-btn"
+            class="btn-default rewind__exit-fullscreen-btn --special-kbd"
             @icon={{if this.fullScreen "discourse-compress" "discourse-expand"}}
             @action={{this.toggleFullScreen}}
           />
           <div
             class="rewind__scroll-wrapper"
             {{didInsert this.registerScrollWrapper}}
-            {{on "scroll" this.handleScroll}}
           >
 
             {{#each this.rewind as |report|}}

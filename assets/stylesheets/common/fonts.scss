@@ -57,4 +57,7 @@
 
 h2.rewind-report-title {
   text-transform: uppercase;
+  color: var(--rewind-green);
+  z-index: 2;
+  line-height: 1.2;
 }

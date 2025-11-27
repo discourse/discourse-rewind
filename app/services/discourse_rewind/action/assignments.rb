@@ -5,7 +5,19 @@
 module DiscourseRewind
   module Action
     class Assignments < BaseReport
+      FakeData = {
+        data: {
+          total_assigned: 24,
+          completed: 18,
+          pending: 6,
+          assigned_by_user: 15,
+          completion_rate: 75.0,
+        },
+        identifier: "assignments",
+      }
+
       def call
+        return FakeData if Rails.env.development?
         return if !enabled?
 
         # Assignments made to the user
