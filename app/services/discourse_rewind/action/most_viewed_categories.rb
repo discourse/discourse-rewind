@@ -20,9 +20,13 @@ module DiscourseRewind
           TopicViewItem
             .joins(:topic)
             .joins("INNER JOIN categories ON categories.id = topics.category_id")
-            .where(user: user)
-            .where(viewed_at: date)
-            .where(categories: { id: user.guardian.allowed_category_ids })
+            .where(
+              user: user,
+              viewed_at: date,
+              categories: {
+                id: user.guardian.allowed_category_ids,
+              },
+            )
             .group("categories.id, categories.name")
             .order("COUNT(*) DESC")
             .limit(4)

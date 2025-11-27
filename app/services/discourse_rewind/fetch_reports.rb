@@ -5,7 +5,8 @@ module DiscourseRewind
   #
   # @example
   #  ::DiscourseRewind::Rewind::Fetch.call(
-  #    guardian: guardian
+  #    guardian: guardian,
+  #    params: { year: 2023, username: 'codinghorror' }
   #  )
   #
   class FetchReports
