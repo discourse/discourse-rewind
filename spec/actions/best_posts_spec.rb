@@ -24,24 +24,24 @@ RSpec.describe DiscourseRewind::Action::BestPosts do
             topic_id: post_4.topic_id,
             like_count: post_4.like_count,
             reply_count: post_4.reply_count,
-            raw: post_4.raw,
-            cooked: post_4.cooked,
+            excerpt:
+              post_4.excerpt(200, { strip_links: true, remap_emoji: true, keep_images: true }),
           },
           {
             post_number: post_3.post_number,
             topic_id: post_3.topic_id,
             like_count: post_3.like_count,
             reply_count: post_3.reply_count,
-            raw: post_3.raw,
-            cooked: post_3.cooked,
+            excerpt:
+              post_3.excerpt(200, { strip_links: true, remap_emoji: true, keep_images: true }),
           },
           {
             post_number: post_1.post_number,
             topic_id: post_1.topic_id,
             like_count: post_1.like_count,
             reply_count: post_1.reply_count,
-            raw: post_1.raw,
-            cooked: post_1.cooked,
+            excerpt:
+              post_1.excerpt(200, { strip_links: true, remap_emoji: true, keep_images: true }),
           },
         ],
       )
