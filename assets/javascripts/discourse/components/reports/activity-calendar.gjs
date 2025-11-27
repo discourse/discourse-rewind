@@ -29,6 +29,32 @@ export default class ActivityCalendar extends Component {
   }
 
   @action
+  computeCellTitle(cell) {
+    if (!cell || !cell.date) {
+      return "";
+    }
+
+    const date = moment(cell.date).format("LL");
+
+    if (cell.visited && cell.post_count === 0) {
+      return i18n(
+        "discourse_rewind.reports.activity_calendar.cell_title.visited_no_posts",
+        { date }
+      );
+    } else if (cell.post_count > 0) {
+      return i18n(
+        "discourse_rewind.reports.activity_calendar.cell_title.visited_with_posts",
+        { date, count: cell.post_count }
+      );
+    }
+
+    return i18n(
+      "discourse_rewind.reports.activity_calendar.cell_title.no_activity",
+      { date }
+    );
+  }
+
+  @action
   computeClass(count) {
     if (!count) {
       return "-empty";
@@ -107,7 +133,7 @@ export default class ActivityCalendar extends Component {
                 {{#each row as |cell|}}
                   <td
                     data-date={{cell.date}}
-                    title={{cell.date}}
+                    title={{this.computeCellTitle cell}}
                     class={{concatClass
                       "rewind-calendar-cell"
                       (this.computeClass cell.post_count)
