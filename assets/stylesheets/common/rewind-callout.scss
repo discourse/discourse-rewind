@@ -8,6 +8,10 @@
 .rewind-callout__container {
   height: 47px;
   border-bottom: 1px solid var(--primary-low);
+
+  @media screen and (width <= 639px) {
+    height: 40px;
+  }
 }
 
 #rewind-vhs {
@@ -46,6 +50,10 @@
     top: 0.75em;
     right: 1em;
     font-size: var(--font-down-3);
+
+    @media screen and (width <= 639px) {
+      top: 0.45em;
+    }
   }
 }
 
