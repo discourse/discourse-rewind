@@ -11,6 +11,10 @@
     font-size: 24px;
   }
 
+  &:not(.--fullscreen) {
+    height: 65vh;
+  }
+
   &.--fullscreen {
     top: 0;
     left: 0;
