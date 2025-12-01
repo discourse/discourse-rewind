@@ -79,25 +79,25 @@ export default class WordCard extends Component {
       {{on "mouseleave" this.handleLeave}}
       class={{concatClass
         "rewind-card__wrapper"
-        (if this.longWord "-long-word")
+        (if this.longWord "--long-word")
       }}
       style={{this.cardStyle}}
       {{didInsert this.registerCardContainer}}
       role="button"
     >
       <div class="rewind-card__inner">
-        <div class="rewind-card -front">
-          <span class="rewind-card__image tl">{{emoji
-              this.mysteryData.emoji
-            }}</span>
-          <span class="rewind-card__image cr">{{emoji
-              this.mysteryData.emoji
-            }}</span>
-          <span class="rewind-card__image br">{{emoji
-              this.mysteryData.emoji
-            }}</span>
+        <div class="rewind-card --front">
+          <span class="rewind-card__image tl">
+            {{emoji this.mysteryData.emoji}}
+          </span>
+          <span class="rewind-card__image cr">
+            {{emoji this.mysteryData.emoji}}
+          </span>
+          <span class="rewind-card__image br">
+            {{emoji this.mysteryData.emoji}}
+          </span>
         </div>
-        <div class="rewind-card -back">
+        <div class="rewind-card --back">
           <span class="rewind-card__title">{{@word}}</span>
           <span class="rewind-card__data">{{@count}}x</span>
         </div>

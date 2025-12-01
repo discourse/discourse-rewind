@@ -31,18 +31,18 @@ export default class ActivityCalendar extends Component {
   @action
   computeClass(count) {
     if (!count) {
-      return "-empty";
+      return "--empty";
     } else if (count < 10) {
-      return "-low";
+      return "--low";
     } else if (count < 20) {
-      return "-medium";
+      return "--medium";
     } else {
-      return "-high";
+      return "--high";
     }
   }
 
   <template>
-    <div class="rewind-report-page -activity-calendar">
+    <div class="rewind-report-page --activity-calendar">
       <h2 class="rewind-report-title">{{i18n
           "discourse_rewind.reports.activity_calendar.title"
         }}</h2>

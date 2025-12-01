@@ -19,10 +19,10 @@ export default class ReadingTime extends Component {
 
   <template>
     {{#if @report.data}}
-      <div class="rewind-report-page -reading-time">
-        <h2 class="rewind-report-title">{{i18n
-            "discourse_rewind.reports.reading_time.title"
-          }}</h2>
+      <div class="rewind-report-page --reading-time">
+        <h2 class="rewind-report-title">
+          {{i18n "discourse_rewind.reports.reading_time.title"}}
+        </h2>
         <div class="rewind-card">
           <p class="reading-time__text">
             {{htmlSafe

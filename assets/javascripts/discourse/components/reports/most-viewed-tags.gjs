@@ -3,7 +3,7 @@ import { i18n } from "discourse-i18n";
 
 const MostViewedTags = <template>
   {{#if @report.data.length}}
-    <div class="rewind-report-page -most-viewed-tags">
+    <div class="rewind-report-page --most-viewed-tags">
       <h2 class="rewind-report-title">{{i18n
           "discourse_rewind.reports.most_viewed_tags.title"
           count=@report.data.length

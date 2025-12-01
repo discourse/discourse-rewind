@@ -32,33 +32,33 @@ export default class Reactions extends Component {
   }
 
   <template>
-    <div class="rewind-report-page -post-received-reactions">
-      <h2 class="rewind-report-title">{{i18n
-          "discourse_rewind.reports.post_received_reactions.title"
-        }}</h2>
+    <div class="rewind-report-page --post-received-reactions">
+      <h2 class="rewind-report-title">
+        {{i18n "discourse_rewind.reports.post_received_reactions.title"}}
+      </h2>
       <div class="rewind-report-container">
         {{#each-in this.receivedReactions as |emojiName count|}}
           <div class="rewind-card scale">
-            <span class="rewind-card__emoji">{{replaceEmoji
-                (concat ":" emojiName ":")
-              }}</span>
+            <span class="rewind-card__emoji">
+              {{replaceEmoji (concat ":" emojiName ":")}}
+            </span>
             <span class="rewind-card__data">{{count}}</span>
           </div>
         {{/each-in}}
       </div>
     </div>
 
-    <div class="rewind-report-page -post-used-reactions">
-      <h2 class="rewind-report-title">{{i18n
-          "discourse_rewind.reports.post_used_reactions.title"
-        }}</h2>
+    <div class="rewind-report-page --post-used-reactions">
+      <h2 class="rewind-report-title">
+        {{i18n "discourse_rewind.reports.post_used_reactions.title"}}
+      </h2>
       <div class="rewind-card">
         <div class="rewind-reactions-chart">
           {{#each-in @report.data.post_used_reactions as |emojiName count|}}
             <div class="rewind-reactions-row">
-              <span class="emoji">{{replaceEmoji
-                  (concat ":" emojiName ":")
-                }}</span>
+              <span class="emoji">
+                {{replaceEmoji (concat ":" emojiName ":")}}
+              </span>
               <span class="percentage">{{this.computePercentage count}}</span>
               <div
                 class="rewind-reactions-bar"

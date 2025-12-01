@@ -3,11 +3,13 @@ import { i18n } from "discourse-i18n";
 
 const MostViewedCategories = <template>
   {{#if @report.data.length}}
-    <div class="rewind-report-page -most-viewed-categories">
-      <h2 class="rewind-report-title">{{i18n
+    <div class="rewind-report-page --most-viewed-categories">
+      <h2 class="rewind-report-title">
+        {{i18n
           "discourse_rewind.reports.most_viewed_categories.title"
           count=@report.data.length
-        }}</h2>
+        }}
+      </h2>
       <div class="rewind-report-container">
         {{#each @report.data as |data|}}
           <a class="folder-wrapper" href={{concat "/c/-/" data.category_id}}>

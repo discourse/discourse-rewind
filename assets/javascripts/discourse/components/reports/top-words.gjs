@@ -8,7 +8,7 @@ export default class WordCards extends Component {
   }
 
   <template>
-    <div class="rewind-report-page -top-words">
+    <div class="rewind-report-page --top-words">
       <div class="rewind-report-container">
         <h2 class="rewind-report-title">{{i18n
             "discourse_rewind.reports.top_words.title"

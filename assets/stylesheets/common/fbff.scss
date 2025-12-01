@@ -1,5 +1,6 @@
-.-fbff {
+.--fbff {
   --border-size: 6px;
+  margin-block: 1em;
 
   @media screen and (width <= 768px) {
     --border-size: 4px;
@@ -68,6 +69,7 @@
       justify-self: center;
       width: 75px;
       height: 75px;
+      border-radius: 0;
 
       @media screen and (width <= 768px) {
         width: 50px;

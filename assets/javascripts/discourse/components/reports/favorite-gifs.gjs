@@ -10,7 +10,7 @@ export default class FavoriteGifs extends Component {
 
   <template>
     {{#if this.favoriteGifs.length}}
-      <div class="rewind-report-page -favorite-gifs">
+      <div class="rewind-report-page --favorite-gifs">
         <h2 class="rewind-report-title">{{i18n
             "discourse_rewind.reports.favorite_gifs.title"
             count=this.favoriteGifs.length

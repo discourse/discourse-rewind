@@ -15,7 +15,7 @@ import Assignments from "discourse/plugins/discourse-rewind/discourse/components
 import BestPosts from "discourse/plugins/discourse-rewind/discourse/components/reports/best-posts";
 import BestTopics from "discourse/plugins/discourse-rewind/discourse/components/reports/best-topics";
 import ChatUsage from "discourse/plugins/discourse-rewind/discourse/components/reports/chat-usage";
-import FavoriteGifs from "discourse/plugins/discourse-rewind/discourse/components/reports/favorite-gifs";
+// import FavoriteGifs from "discourse/plugins/discourse-rewind/discourse/components/reports/favorite-gifs";
 import FBFF from "discourse/plugins/discourse-rewind/discourse/components/reports/fbff";
 import RewindHeader from "discourse/plugins/discourse-rewind/discourse/components/reports/header";
 import Invites from "discourse/plugins/discourse-rewind/discourse/components/reports/invites";
@@ -77,7 +77,7 @@ export default class Rewind extends Component {
     <div
       class={{concatClass
         "rewind-container"
-        (if this.fullScreen "-fullscreen")
+        (if this.fullScreen "--fullscreen")
       }}
       {{didInsert this.loadRewind}}
       {{on "keydown" this.handleEscape}}
@@ -131,8 +131,8 @@ export default class Rewind extends Component {
                   <Assignments @report={{report}} />
                 {{else if (eq report.identifier "chat-usage")}}
                   <ChatUsage @report={{report}} />
-                {{else if (eq report.identifier "favorite-gifs")}}
-                  <FavoriteGifs @report={{report}} />
+                  {{!-- else if (eq report.identifier "favorite-gifs")}}
+                  <FavoriteGifs @report={{report}} / --}}
                 {{else if (eq report.identifier "invites")}}
                   <Invites @report={{report}} />
                 {{else if (eq report.identifier "new-user-interactions")}}

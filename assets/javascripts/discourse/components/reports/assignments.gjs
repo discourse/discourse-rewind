@@ -1,70 +1,59 @@
-import icon from "discourse/helpers/d-icon";
 import number from "discourse/helpers/number";
 import { i18n } from "discourse-i18n";
 
 const Assignments = <template>
-  <div class="rewind-report-page -assignments">
-    <h2 class="rewind-report-title">{{i18n
-        "discourse_rewind.reports.assignments.title"
-      }}</h2>
-    <div class="rewind-report-container">
-      <div class="rewind-card scale">
-        <div class="assignments__stat">
-          {{icon "user-check"}}
-          <span class="assignments__label">{{i18n
-              "discourse_rewind.reports.assignments.total_assigned"
-            }}</span>
-          <span class="assignments__value">{{number
-              @report.data.total_assigned
-            }}</span>
+  <div class="rewind-report-page --assignments">
+    <div class="sticky-board">
+      <div class="sticky-note --yellow --rotate-left">
+        <div class="sticky-note__content">
+          <div class="sticky-note__title">
+            {{i18n "discourse_rewind.reports.assignments.completed"}}
+          </div>
+          <div class="sticky-note__value">
+            {{number @report.data.completed}}
+          </div>
         </div>
       </div>
 
-      <div class="rewind-card scale">
-        <div class="assignments__stat">
-          {{icon "check"}}
-          <span class="assignments__label">{{i18n
-              "discourse_rewind.reports.assignments.completed"
-            }}</span>
-          <span class="assignments__value">{{number
-              @report.data.completed
-            }}</span>
+      <div class="sticky-note --pink --rotate-right">
+        <div class="sticky-note__content">
+          <div class="sticky-note__title">
+            {{i18n "discourse_rewind.reports.assignments.pending"}}
+          </div>
+          <div class="sticky-note__value">{{number @report.data.pending}}</div>
         </div>
       </div>
 
-      <div class="rewind-card scale">
-        <div class="assignments__stat">
-          {{icon "clock"}}
-          <span class="assignments__label">{{i18n
-              "discourse_rewind.reports.assignments.pending"
-            }}</span>
-          <span class="assignments__value">{{number
-              @report.data.pending
-            }}</span>
+      <div class="sticky-note --blue --rotate-left-small">
+        <div class="sticky-note__content">
+          <div class="sticky-note__title">
+            {{i18n "discourse_rewind.reports.assignments.total_assigned"}}
+          </div>
+          <div class="sticky-note__value">
+            {{number @report.data.total_assigned}}
+          </div>
         </div>
       </div>
 
-      <div class="rewind-card scale">
-        <div class="assignments__stat">
-          {{icon "hand-point-right"}}
-          <span class="assignments__label">{{i18n
-              "discourse_rewind.reports.assignments.assigned_by_user"
-            }}</span>
-          <span class="assignments__value">{{number
-              @report.data.assigned_by_user
-            }}</span>
+      <div class="sticky-note --green --rotate-right-small">
+        <div class="sticky-note__content">
+          <div class="sticky-note__title">
+            {{i18n "discourse_rewind.reports.assignments.assigned_by_user"}}
+          </div>
+          <div class="sticky-note__value">
+            {{number @report.data.assigned_by_user}}
+          </div>
         </div>
       </div>
 
-      <div class="rewind-card scale">
-        <div class="assignments__stat">
-          {{icon "percent"}}
-          <span class="assignments__label">{{i18n
-              "discourse_rewind.reports.assignments.completion_rate"
-            }}</span>
-          <span
-            class="assignments__value"
-          >{{@report.data.completion_rate}}%</span>
+      <div class="sticky-note --orange">
+        <div class="sticky-note__content">
+          <div class="sticky-note__title">
+            {{i18n "discourse_rewind.reports.assignments.completion_rate"}}
+          </div>
+          <div
+            class="sticky-note__value"
+          >{{@report.data.completion_rate}}%</div>
         </div>
       </div>
     </div>

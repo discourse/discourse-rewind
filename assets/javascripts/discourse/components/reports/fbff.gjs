@@ -3,10 +3,10 @@ import avatar from "discourse/helpers/bound-avatar-template";
 import { i18n } from "discourse-i18n";
 
 const FBFF = <template>
-  <div class="rewind-report-page -fbff">
-    <h2 class="rewind-report-title">{{i18n
-        "discourse_rewind.reports.fbff.title"
-      }}</h2>
+  <div class="rewind-report-page --fbff">
+    <h2 class="rewind-report-title">
+      {{i18n "discourse_rewind.reports.fbff.title"}}
+    </h2>
     <div class="rewind-report-container">
       <div class="rewind-card">
         <div class="fbff-avatar-container">

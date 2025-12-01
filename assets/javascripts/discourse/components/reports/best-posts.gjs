@@ -11,27 +11,31 @@ export default class BestPosts extends Component {
 
   <template>
     {{#if @report.data.length}}
-      <div class="rewind-report-page -best-posts">
-        <h2 class="rewind-report-title">{{i18n
+      <div class="rewind-report-page --best-posts">
+        <h2 class="rewind-report-title">
+          {{i18n
             "discourse_rewind.reports.best_posts.title"
             count=@report.data.length
-          }}</h2>
+          }}
+        </h2>
         <div class="rewind-report-container">
           {{#each @report.data as |post idx|}}
             <div class={{concat "rewind-card" " rank-" (this.rank idx)}}>
-              <span class="best-posts -rank"></span>
-              <span class="best-posts -rank"></span>
-              <div class="best-posts__post"><p>{{htmlSafe
-                    post.excerpt
-                  }}</p></div>
+              <span class="best-posts --rank"></span>
+              <span class="best-posts --rank"></span>
+              <div class="best-posts__post">
+                <p>{{htmlSafe post.excerpt}}</p>
+              </div>
               <div class="best-posts__metadata">
                 <span class="best-posts__likes">
-                  {{icon "heart"}}{{post.like_count}}</span>
+                  {{icon "heart"}}{{post.like_count}}
+                </span>
                 <span class="best-posts__replies">
-                  {{icon "comment"}}{{post.reply_count}}</span>
-                <a href="/t/{{post.topic_id}}/{{post.post_number}}">{{i18n
-                    "discourse_rewind.reports.best_posts.view_post"
-                  }}</a>
+                  {{icon "comment"}}{{post.reply_count}}
+                </span>
+                <a href="/t/{{post.topic_id}}/{{post.post_number}}">
+                  {{i18n "discourse_rewind.reports.best_posts.view_post"}}
+                </a>
               </div>
             </div>
           {{/each}}

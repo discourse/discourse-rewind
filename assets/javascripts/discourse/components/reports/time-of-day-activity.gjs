@@ -1,22 +1,34 @@
 import Component from "@glimmer/component";
-import { concat } from "@ember/helper";
+import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
+import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
-import icon from "discourse/helpers/d-icon";
-import number from "discourse/helpers/number";
+import DButton from "discourse/components/d-button";
 import { i18n } from "discourse-i18n";
 
 export default class TimeOfDayActivity extends Component {
+  @service currentUser;
+
+  @tracked isPlaying = false;
+  @tracked playbackProgress = 0;
+  @tracked isGlitching = false;
+
+  audioContext = null;
+  audioSource = null;
+  playbackTimeout = null;
+  stereoPanner = null;
+  hasGlitched = false;
+
+  SVG_WIDTH = 1200;
+  SVG_HEIGHT = 200;
+  SVG_PADDING = 40;
+
   get activityByHour() {
-    return this.args.report.data.activity_by_hour ?? {};
+    return this.args.report?.data?.activity_by_hour ?? {};
   }
 
   get mostActiveHour() {
-    return this.args.report.data.most_active_hour;
-  }
-
-  get personality() {
-    return this.args.report.data.personality;
+    return this.args.report?.data?.most_active_hour ?? 0;
   }
 
   get maxActivity() {
@@ -24,16 +36,138 @@ export default class TimeOfDayActivity extends Component {
     return Math.max(...counts, 1);
   }
 
-  get personalityIcon() {
-    if (this.personality?.type === "early_bird") {
-      return "sun";
-    } else if (this.personality?.type === "night_owl") {
-      return "moon";
-    }
-    return "clock";
+  get plotDimensions() {
+    return {
+      width: this.SVG_WIDTH,
+      height: this.SVG_HEIGHT,
+      padding: this.SVG_PADDING,
+      plotWidth: this.SVG_WIDTH - this.SVG_PADDING * 2,
+      plotHeight: this.SVG_HEIGHT - this.SVG_PADDING * 2,
+    };
   }
 
-  @action
+  get personalizedAudioParams() {
+    const username = this.currentUser?.username || "default";
+
+    // convert username to seed
+    const hash = (str) => {
+      let h = 0;
+      for (let i = 0; i < str.length; i++) {
+        h = (h * 31 + str.charCodeAt(i)) | 0; // eslint-disable-line no-bitwise
+      }
+      return Math.abs(h);
+    };
+
+    const seed = hash(username);
+
+    // Three distinct scales for variety
+    const scales = [
+      // C minor pentatonic
+      [
+        130.81, 155.56, 174.61, 196.0, 233.08, 261.63, 311.13, 349.23, 392.0,
+        466.16, 523.25,
+      ],
+      // C major pentatonic
+      [
+        130.81, 146.83, 164.81, 196.0, 220.0, 261.63, 293.66, 329.63, 392.0,
+        440.0, 523.25,
+      ],
+      // Blues scale
+      [
+        130.81, 155.56, 164.81, 174.61, 196.0, 233.08, 261.63, 311.13, 329.63,
+        349.23, 392.0,
+      ],
+    ];
+
+    const harmonyRatios = [1.5, 1.25, 2.0]; // Perfect fifth, major third, octave
+
+    return {
+      scale: scales[seed % scales.length],
+      harmonyRatio: harmonyRatios[(seed >> 4) % harmonyRatios.length], // eslint-disable-line no-bitwise
+      bitCrushSteps: 5, // Fixed bit crushing
+      wobbleSpeed: 2.5, // Fixed wobble speed
+    };
+  }
+
+  get waveformPath() {
+    const { height, padding, plotWidth, plotHeight } = this.plotDimensions;
+
+    const hours = Array.from({ length: 24 }, (_, i) => i);
+    const points = hours.map((hour) => {
+      const count = this.activityByHour[hour] || 0;
+      const x = padding + (hour / 23) * plotWidth;
+      const y = height - padding - (count / this.maxActivity) * plotHeight;
+      return { x, y };
+    });
+
+    const tension = 0.3;
+    let path = `M ${points[0].x} ${points[0].y}`;
+
+    for (let i = 0; i < points.length - 1; i++) {
+      const p0 = points[Math.max(i - 1, 0)];
+      const p1 = points[i];
+      const p2 = points[i + 1];
+      const p3 = points[Math.min(i + 2, points.length - 1)];
+
+      const cp1x = p1.x + ((p2.x - p0.x) / 6) * tension;
+      const cp1y = p1.y + ((p2.y - p0.y) / 6) * tension;
+      const cp2x = p2.x - ((p3.x - p1.x) / 6) * tension;
+      const cp2y = p2.y - ((p3.y - p1.y) / 6) * tension;
+
+      path += ` C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${p2.x} ${p2.y}`;
+    }
+
+    return path;
+  }
+
+  get waveformPoints() {
+    const { height, padding, plotWidth, plotHeight } = this.plotDimensions;
+
+    return Array.from({ length: 24 }, (_, hour) => {
+      const count = this.activityByHour[hour] || 0;
+      const x = padding + (hour / 23) * plotWidth;
+      const y = height - padding - (count / this.maxActivity) * plotHeight;
+      const isActive = hour === this.mostActiveHour;
+      return {
+        x,
+        y,
+        hour,
+        radius: isActive ? 6 : 2.5,
+        class: isActive ? "oscilloscope__dot active" : "oscilloscope__dot",
+        showLabel: hour % 3 === 0,
+      };
+    });
+  }
+
+  get gridLines() {
+    return Array.from({ length: 5 }, (_, i) => ({
+      y: this.SVG_PADDING + (i * (this.SVG_HEIGHT - 2 * this.SVG_PADDING)) / 4,
+      style: htmlSafe(`opacity: ${i === 0 || i === 4 ? 0.3 : 0.15}`),
+    }));
+  }
+
+  get playbackPosition() {
+    if (!this.isPlaying) {
+      return null;
+    }
+
+    const { height, padding, plotWidth, plotHeight } = this.plotDimensions;
+
+    const currentHour = this.playbackProgress * 23;
+    const hourIndex = Math.floor(currentHour);
+    const nextHourIndex = Math.min(hourIndex + 1, 23);
+    const t = currentHour - hourIndex;
+
+    const currentActivity = this.activityByHour[hourIndex] || 0;
+    const nextActivity = this.activityByHour[nextHourIndex] || 0;
+    const activity = currentActivity + (nextActivity - currentActivity) * t;
+
+    const x = padding + (currentHour / 23) * plotWidth;
+    const y = height - padding - (activity / this.maxActivity) * plotHeight;
+
+    return { x, y };
+  }
+
   formatHour(hour) {
     const hourNum = parseInt(hour, 10);
     const period = hourNum >= 12 ? "PM" : "AM";
@@ -43,69 +177,320 @@ export default class TimeOfDayActivity extends Component {
   }
 
   @action
-  computeBarHeight(count) {
-    const percentage = (count / this.maxActivity) * 100;
-    return htmlSafe(`height: ${percentage}%`);
+  stopWaveform() {
+    if (this.audioSource) {
+      this.audioSource.stop();
+    }
+    if (this.audioContext) {
+      this.audioContext.close();
+    }
+    if (this.animationFrame) {
+      cancelAnimationFrame(this.animationFrame);
+    }
+    if (this.playbackTimeout) {
+      clearTimeout(this.playbackTimeout);
+    }
+    this.isPlaying = false;
+    this.playbackProgress = 0;
+    this.isGlitching = false;
+    this.hasGlitched = false;
+    this.audioContext = null;
+    this.audioSource = null;
+    this.playbackTimeout = null;
+    this.stereoPanner = null;
   }
 
   @action
-  isActiveHour(hour) {
-    return parseInt(hour, 10) === this.mostActiveHour;
+  async playWaveform() {
+    if (this.isPlaying) {
+      this.stopWaveform();
+      return;
+    }
+
+    this.isPlaying = true;
+    this.playbackProgress = 0;
+
+    try {
+      this.audioContext = new (window.AudioContext ||
+        window.webkitAudioContext)();
+
+      // Musical timing: each hour is a beat (even tempo)
+      const bpm = 200; // Beats per minute
+      const beatsPerHour = 1; // Each hour = 1 beat
+      const totalBeats = 24 * beatsPerHour;
+      const duration = (totalBeats / bpm) * 60; // Convert to seconds
+
+      const sampleRate = this.audioContext.sampleRate;
+      const numSamples = duration * sampleRate;
+
+      const buffer = this.audioContext.createBuffer(1, numSamples, sampleRate);
+      const channelData = buffer.getChannelData(0);
+
+      const params = this.personalizedAudioParams;
+
+      const hours = Array.from({ length: 24 }, (_, i) => i);
+      const samplesPerHour = numSamples / 24;
+
+      for (let i = 0; i < numSamples; i++) {
+        const hourIndex = Math.floor(i / samplesPerHour);
+        const nextHourIndex = Math.min(hourIndex + 1, 23);
+        const t = (i % samplesPerHour) / samplesPerHour;
+
+        // Get activity for current and next hour
+        const currentActivity = this.activityByHour[hours[hourIndex]] || 0;
+        const nextActivity = this.activityByHour[hours[nextHourIndex]] || 0;
+
+        // Interpolate between hours
+        const activity = currentActivity + (nextActivity - currentActivity) * t;
+
+        // Map activity to personalized musical scale
+        const scale = params.scale;
+        const normalizedActivity = activity / this.maxActivity;
+
+        // Map to scale index with smooth interpolation
+        const scalePosition = normalizedActivity * (scale.length - 1);
+        const lowerIndex = Math.floor(scalePosition);
+        const upperIndex = Math.min(lowerIndex + 1, scale.length - 1);
+        const blend = scalePosition - lowerIndex;
+
+        let frequency =
+          scale[lowerIndex] + (scale[upperIndex] - scale[lowerIndex]) * blend;
+
+        // Add smooth musical vibrato to low activity areas
+        const time = i / sampleRate;
+        if (normalizedActivity < 0.3) {
+          // Very gentle vibrato for pleasant feel
+          const wobbleAmount = 1.5 * (0.3 - normalizedActivity);
+          const wobble =
+            Math.sin(2 * Math.PI * params.wobbleSpeed * time) * wobbleAmount;
+          frequency += wobble;
+        }
+
+        // Helper to generate soft retro waveform (square + triangle mix)
+        const generateWave = (freq) => {
+          const sine = Math.sin(2 * Math.PI * freq * time);
+          const square = sine > 0 ? 1 : -1;
+          const triangle = (2 / Math.PI) * Math.asin(sine);
+          return square * 0.5 + triangle * 0.5;
+        };
+
+        // Generate main voice and harmony
+        const mainWave = generateWave(frequency);
+        const harmonyWave = generateWave(frequency * params.harmonyRatio);
+
+        // Mix voices (70/30 split)
+        const mixedWave = mainWave * 0.7 + harmonyWave * 0.3;
+
+        // Add bit crushing effect for retro feel
+        const crushed =
+          Math.round(mixedWave * params.bitCrushSteps) / params.bitCrushSteps;
+
+        // Add minimal noise (sparkle at peak hour)
+        const peakHourTime = (this.mostActiveHour / 23) * duration;
+        const peakWindow = 0.2;
+        const isPeakMoment =
+          Math.abs(time - peakHourTime) < peakWindow && time >= peakHourTime;
+
+        const noise = (Math.random() - 0.5) * (isPeakMoment ? 0.08 : 0.02);
+
+        // Reduce volume for zero/very low activity sections
+        const lowActivityVolume = normalizedActivity < 0.05 ? 0.3 : 1;
+
+        // Output with all effects applied
+        channelData[i] = (crushed * 0.15 + noise) * lowActivityVolume;
+      }
+
+      // Create source and play
+      this.audioSource = this.audioContext.createBufferSource();
+      this.audioSource.buffer = buffer;
+
+      // Create reverb impulse response
+      const reverbDuration = 2; // 2 seconds of reverb
+      const reverbSamples = sampleRate * reverbDuration;
+      const reverbBuffer = this.audioContext.createBuffer(
+        2,
+        reverbSamples,
+        sampleRate
+      );
+      const reverbLeft = reverbBuffer.getChannelData(0);
+      const reverbRight = reverbBuffer.getChannelData(1);
+
+      // Generate reverb impulse (exponential decay with randomness)
+      for (let i = 0; i < reverbSamples; i++) {
+        const decay = Math.exp(-3 * (i / reverbSamples)); // Exponential decay
+        reverbLeft[i] = (Math.random() * 2 - 1) * decay;
+        reverbRight[i] = (Math.random() * 2 - 1) * decay;
+      }
+
+      // Create convolver for reverb
+      const reverb = this.audioContext.createConvolver();
+      reverb.buffer = reverbBuffer;
+
+      // Create dry/wet mix for reverb (30% wet, 70% dry)
+      const dryGain = this.audioContext.createGain();
+      const wetGain = this.audioContext.createGain();
+      dryGain.gain.value = 0.7;
+      wetGain.gain.value = 0.3;
+
+      // Add stereo panner (pan from left to right as time progresses)
+      this.stereoPanner = this.audioContext.createStereoPanner();
+      this.stereoPanner.pan.value = -1; // Start at left
+
+      // Add filter for retro feel
+      const filter = this.audioContext.createBiquadFilter();
+      filter.type = "lowpass";
+      filter.frequency.value = 2500; // Tame the highs
+
+      // Connect audio graph: source -> filter -> split to dry/wet paths -> panner -> output
+      this.audioSource.connect(filter);
+
+      // Dry path (no reverb)
+      filter.connect(dryGain);
+      dryGain.connect(this.stereoPanner);
+
+      // Wet path (with reverb)
+      filter.connect(reverb);
+      reverb.connect(wetGain);
+      wetGain.connect(this.stereoPanner);
+
+      this.stereoPanner.connect(this.audioContext.destination);
+
+      this.audioSource.start();
+
+      // Animate playback progress and stereo panning
+      const startTime = Date.now();
+      const animate = () => {
+        const elapsed = (Date.now() - startTime) / 1000;
+        this.playbackProgress = Math.min(elapsed / duration, 1);
+
+        // Pan from left (-1) to right (1) as we progress
+        if (this.stereoPanner) {
+          this.stereoPanner.pan.value = -1 + this.playbackProgress * 2;
+        }
+
+        // Trigger visual glitch when hitting peak hour
+        const peakHourProgress = this.mostActiveHour / 23;
+        if (
+          !this.hasGlitched &&
+          this.playbackProgress >= peakHourProgress &&
+          this.playbackProgress < peakHourProgress + 0.05
+        ) {
+          this.isGlitching = true;
+          this.hasGlitched = true;
+          setTimeout(() => {
+            this.isGlitching = false;
+          }, 200);
+        }
+
+        if (this.playbackProgress < 1) {
+          this.animationFrame = requestAnimationFrame(animate);
+        }
+      };
+      this.animationFrame = requestAnimationFrame(animate);
+
+      // Reset playing state when done
+      this.playbackTimeout = setTimeout(() => {
+        this.stopWaveform();
+      }, duration * 1000);
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error("Error playing waveform:", error);
+      this.stopWaveform();
+    }
   }
 
   <template>
-    <div class="rewind-report-page -time-of-day-activity">
+    <div class="rewind-report-page --time-of-day-activity">
       <h2 class="rewind-report-title">{{i18n
           "discourse_rewind.reports.time_of_day_activity.title"
-        }}</h2>
-
-      {{#if this.personality}}
-        <div class="rewind-card">
-          <div class="time-of-day__personality">
-            {{icon this.personalityIcon}}
-            <span class="time-of-day__personality-type">{{i18n
-                (concat
-                  "discourse_rewind.reports.time_of_day_activity.personality."
-                  this.personality.type
-                )
-              }}</span>
-            {{#if this.personality.percentage}}
-              <span class="time-of-day__personality-percentage">
-                ({{this.personality.percentage}}%)</span>
-            {{/if}}
-          </div>
-        </div>
-      {{/if}}
+        }}
+      </h2>
 
       <div class="rewind-card">
-        <div class="time-of-day__chart">
-          {{#each-in this.activityByHour as |hour count|}}
-            <div
-              class="time-of-day__bar-container
-                {{if (this.isActiveHour hour) 'active'}}"
-            >
-              <div
-                class="time-of-day__bar"
-                style={{this.computeBarHeight count}}
-                title="{{this.formatHour hour}}: {{number count}} activities"
-              ></div>
-              <span class="time-of-day__hour-label">{{this.formatHour
-                  hour
-                }}</span>
-            </div>
-          {{/each-in}}
+        <div
+          class="time-of-day__oscilloscope
+            {{if this.isGlitching '--glitching'}}"
+        >
+          <DButton
+            @action={{this.playWaveform}}
+            @icon={{if this.isPlaying "volume-xmark" "volume-high"}}
+            class="oscilloscope__play-btn {{if this.isPlaying '--playing'}}"
+            @title={{if
+              this.isPlaying
+              "discourse_rewind.reports.time_of_day_activity.stop_button"
+              "discourse_rewind.reports.time_of_day_activity.play_button"
+            }}
+          />
+          <svg viewBox="0 0 1200 200" class="oscilloscope__svg">
+            <defs>
+              <filter id="glow">
+                <feGaussianBlur stdDeviation="2" result="coloredBlur" />
+                <feMerge>
+                  <feMergeNode in="coloredBlur" />
+                  <feMergeNode in="SourceGraphic" />
+                </feMerge>
+              </filter>
+              <filter id="glow-strong">
+                <feGaussianBlur stdDeviation="4" result="coloredBlur" />
+                <feMerge>
+                  <feMergeNode in="coloredBlur" />
+                  <feMergeNode in="coloredBlur" />
+                  <feMergeNode in="SourceGraphic" />
+                </feMerge>
+              </filter>
+            </defs>
+
+            {{#each this.gridLines as |gridLine|}}
+              <line
+                x1="40"
+                y1={{gridLine.y}}
+                x2="1160"
+                y2={{gridLine.y}}
+                class="oscilloscope__grid-line"
+                style={{gridLine.style}}
+              />
+            {{/each}}
+
+            {{#each this.waveformPoints as |point|}}
+              {{#if point.showLabel}}
+                <line
+                  x1={{point.x}}
+                  y1="40"
+                  x2={{point.x}}
+                  y2="160"
+                  class="oscilloscope__grid-line --vertical"
+                />
+                <text
+                  x={{point.x}}
+                  y="180"
+                  class="oscilloscope__time-label"
+                >{{this.formatHour point.hour}}</text>
+              {{/if}}
+            {{/each}}
+
+            <path d={{this.waveformPath}} class="oscilloscope__waveform" />
+
+            {{#each this.waveformPoints as |point|}}
+              <circle
+                cx={{point.x}}
+                cy={{point.y}}
+                r={{point.radius}}
+                class={{point.class}}
+              />
+            {{/each}}
+
+            {{#if this.playbackPosition}}
+              <circle
+                cx={{this.playbackPosition.x}}
+                cy={{this.playbackPosition.y}}
+                r="12"
+                class="oscilloscope__playback-dot"
+              />
+            {{/if}}
+          </svg>
         </div>
       </div>
 
-      <div class="time-of-day__legend">
-        <div class="time-of-day__legend-item">
-          {{icon "star"}}
-          <span>{{i18n
-              "discourse_rewind.reports.time_of_day_activity.most_active"
-              hour=(this.formatHour this.mostActiveHour)
-            }}</span>
-        </div>
-      </div>
     </div>
   </template>
 }

@@ -1,4 +1,6 @@
-.-best-posts {
+.--best-posts {
+  margin-bottom: 1em;
+
   .rewind-report-container {
     display: grid;
     grid-template-columns: repeat(3, calc(32% - (1em / 3)));
@@ -16,10 +18,15 @@
     text-align: center;
     box-sizing: border-box;
     border: none;
-    margin-bottom: 1em;
+
+    @media screen and (width >= 550px) {
+      margin-bottom: 1em;
+    }
   }
 
   .rewind-card {
+    border-radius: 0;
+    min-width: 0;
     box-sizing: border-box;
     padding: 0.5em;
     position: relative;
@@ -77,15 +84,6 @@
 
     @media screen and (width <= 475px) {
       max-height: 300px;
-      text-overflow: ellipsis;
-      overflow: hidden;
-      white-space: nowrap;
-
-      p {
-        text-overflow: ellipsis;
-        overflow: hidden;
-        white-space: nowrap;
-      }
     }
   }
 
