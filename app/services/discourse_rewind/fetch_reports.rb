@@ -17,9 +17,11 @@ module DiscourseRewind
     #   @param [Hash] params
     #   @option params [Integer] :year of the rewind
     #   @option params [Integer] :username of the rewind
+    #   @option params [Integer] :count number of reports to fetch (optional, defaults to 3)
     #   @return [Service::Base::Context]
 
     CACHE_DURATION = Rails.env.development? ? 10.seconds : 5.minutes
+    INITIAL_REPORT_COUNT = 3
 
     # order matters
     REPORTS = [
@@ -43,7 +45,9 @@ module DiscourseRewind
 
     model :year
     model :date
+    model :enabled_reports
     model :reports
+    model :total_available
 
     private
 
@@ -72,19 +76,38 @@ module DiscourseRewind
       Date.new(year).all_year
     end
 
-    def fetch_reports(date:, guardian:, year:)
-      key = "rewind:#{guardian.user.username}:#{year}"
-      reports = Discourse.redis.get(key)
+    def fetch_enabled_reports(date:, guardian:, year:)
+      # Generate all reports and filter out nils (disabled/empty reports)
+      # Cache the full list to maintain consistent indices across requests
+      key = "rewind:#{guardian.user.username}:#{year}:all_reports"
+      cached_list = Discourse.redis.get(key)
 
-      if !reports
-        reports =
-          REPORTS.map { |report| report.call(date:, user: guardian.user, guardian:) }.compact
-        Discourse.redis.setex(key, CACHE_DURATION, MultiJson.dump(reports))
-      else
-        reports = MultiJson.load(reports, symbolize_keys: true)
-      end
+      return MultiJson.load(cached_list, symbolize_keys: true) if cached_list
 
+      reports =
+        REPORTS.filter_map do |report_class|
+          begin
+            report_class.call(date:, user: guardian.user, guardian:)
+          rescue => e
+            Rails.logger.error("Failed to generate report #{report_class.name}: #{e.message}")
+            nil
+          end
+        end
+
+      # Cache the complete enabled reports list
+      Discourse.redis.setex(key, CACHE_DURATION, MultiJson.dump(reports))
       reports
+    end
+
+    def fetch_total_available(enabled_reports:)
+      enabled_reports.length
+    end
+
+    def fetch_reports(enabled_reports:, params:)
+      count = params[:count]&.to_i || INITIAL_REPORT_COUNT
+      count = [[count, 1].max, enabled_reports.length].min
+
+      enabled_reports.first(count)
     end
   end
 end

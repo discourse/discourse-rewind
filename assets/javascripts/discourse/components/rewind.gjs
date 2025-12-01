@@ -3,6 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
 import { ajax } from "discourse/lib/ajax";
@@ -24,21 +25,80 @@ export default class Rewind extends Component {
   @tracked rewind = [];
   @tracked fullScreen = true;
   @tracked loadingRewind = false;
+  @tracked totalAvailable = 0;
+  @tracked loadingNextReport = false;
+
+  BUFFER_SIZE = 3;
+
+  // Arrow function for event listener - maintains 'this' binding
+  handleScroll = () => {
+    if (!this.scrollWrapper || this.loadingRewind) {
+      return;
+    }
+
+    const scrollTop = this.scrollWrapper.scrollTop;
+    const scrollHeight = this.scrollWrapper.scrollHeight;
+    const clientHeight = this.scrollWrapper.clientHeight;
+
+    // Trigger preload when scrolled 70% through content
+    const scrollPercentage = (scrollTop + clientHeight) / scrollHeight;
+    if (scrollPercentage > 0.7) {
+      this.preloadNextReports();
+    }
+  };
 
   @action
   registerScrollWrapper(element) {
     this.scrollWrapper = element;
+    this.scrollWrapper.addEventListener("scroll", this.handleScroll);
   }
 
   @action
   async loadRewind() {
     try {
       this.loadingRewind = true;
-      this.rewind = await ajax("/rewinds");
+      const response = await ajax("/rewinds");
+      this.rewind = response.reports;
+      this.totalAvailable = response.total_available;
+
+      // Preload next report to maintain buffer
+      this.preloadNextReports();
     } catch (e) {
       popupAjaxError(e);
     } finally {
       this.loadingRewind = false;
+    }
+  }
+
+  @action
+  async preloadNextReports() {
+    // Load reports to maintain BUFFER_SIZE ahead of current position
+    const currentIndex = this.rewind.length;
+    const targetIndex = currentIndex + this.BUFFER_SIZE;
+
+    if (
+      this.loadingNextReport ||
+      currentIndex >= this.totalAvailable ||
+      targetIndex > this.totalAvailable
+    ) {
+      return;
+    }
+
+    try {
+      this.loadingNextReport = true;
+      const response = await ajax(`/rewinds/${currentIndex}`);
+      this.rewind = [...this.rewind, response.report];
+
+      // Continue preloading if we haven't reached buffer size yet
+      if (this.rewind.length < targetIndex) {
+        this.preloadNextReports();
+      }
+    } catch (e) {
+      // Silently fail for preloading - user already has content to view
+      // eslint-disable-next-line no-console
+      console.error("Failed to preload report:", e);
+    } finally {
+      this.loadingNextReport = false;
     }
   }
 
@@ -66,6 +126,13 @@ export default class Rewind extends Component {
     this.rewindContainer = element;
   }
 
+  @action
+  cleanup() {
+    if (this.scrollWrapper) {
+      this.scrollWrapper.removeEventListener("scroll", this.handleScroll);
+    }
+  }
+
   <template>
     <div
       class={{concatClass
@@ -73,6 +140,7 @@ export default class Rewind extends Component {
         (if this.fullScreen "-fullscreen")
       }}
       {{didInsert this.loadRewind}}
+      {{willDestroy this.cleanup}}
       {{on "keydown" this.handleEscape}}
       {{on "click" this.handleBackdropClick}}
       {{didInsert this.registerRewindContainer}}
