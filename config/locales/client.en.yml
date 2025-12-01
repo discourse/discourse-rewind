@@ -55,7 +55,7 @@ en:
           success_rate: Success Rate
           favorite_features: Most Used Features
           favorite_models: Most Used AI Models
-          wake_up: "Wake up %{username}..."
+          wake_up: "Wake up, %{username}..."
           system_title: "AI USAGE DETECTED"
           section_features: "TOP FEATURES"
           section_models: "TOP MODELS"

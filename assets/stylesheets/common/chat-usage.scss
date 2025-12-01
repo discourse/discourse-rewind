@@ -147,6 +147,7 @@
     transition: all 0.2s ease;
     border: 1px solid var(--rewind-blue);
     gap: 0.5em;
+    font-size: var(--font-down-2);
 
     &:hover {
       background: var(--rewind-white);
