@@ -17,11 +17,13 @@ export default class TimeOfDayActivity extends Component {
   audioSource = null;
   playbackTimeout = null;
   stereoPanner = null;
+  animationFrame = null;
   hasGlitched = false;
 
   SVG_WIDTH = 1200;
   SVG_HEIGHT = 200;
   SVG_PADDING = 40;
+  BIT_CRUSH_STEPS = 5;
 
   get activityByHour() {
     return this.args.report?.data?.activity_by_hour ?? {};
@@ -44,6 +46,14 @@ export default class TimeOfDayActivity extends Component {
       plotWidth: this.SVG_WIDTH - this.SVG_PADDING * 2,
       plotHeight: this.SVG_HEIGHT - this.SVG_PADDING * 2,
     };
+  }
+
+  calculatePoint(hour) {
+    const { height, padding, plotWidth, plotHeight } = this.plotDimensions;
+    const count = this.activityByHour[hour] || 0;
+    const x = padding + (hour / 23) * plotWidth;
+    const y = height - padding - (count / this.maxActivity) * plotHeight;
+    return { x, y };
   }
 
   get personalizedAudioParams() {
@@ -84,21 +94,13 @@ export default class TimeOfDayActivity extends Component {
     return {
       scale: scales[seed % scales.length],
       harmonyRatio: harmonyRatios[(seed >> 4) % harmonyRatios.length], // eslint-disable-line no-bitwise
-      bitCrushSteps: 5, // Fixed bit crushing
-      wobbleSpeed: 2.5, // Fixed wobble speed
     };
   }
 
   get waveformPath() {
-    const { height, padding, plotWidth, plotHeight } = this.plotDimensions;
-
-    const hours = Array.from({ length: 24 }, (_, i) => i);
-    const points = hours.map((hour) => {
-      const count = this.activityByHour[hour] || 0;
-      const x = padding + (hour / 23) * plotWidth;
-      const y = height - padding - (count / this.maxActivity) * plotHeight;
-      return { x, y };
-    });
+    const points = Array.from({ length: 24 }, (_, hour) =>
+      this.calculatePoint(hour)
+    );
 
     const tension = 0.3;
     let path = `M ${points[0].x} ${points[0].y}`;
@@ -121,12 +123,8 @@ export default class TimeOfDayActivity extends Component {
   }
 
   get waveformPoints() {
-    const { height, padding, plotWidth, plotHeight } = this.plotDimensions;
-
     return Array.from({ length: 24 }, (_, hour) => {
-      const count = this.activityByHour[hour] || 0;
-      const x = padding + (hour / 23) * plotWidth;
-      const y = height - padding - (count / this.maxActivity) * plotHeight;
+      const { x, y } = this.calculatePoint(hour);
       const isActive = hour === this.mostActiveHour;
       return {
         x,
@@ -214,11 +212,8 @@ export default class TimeOfDayActivity extends Component {
       this.audioContext = new (window.AudioContext ||
         window.webkitAudioContext)();
 
-      // Musical timing: each hour is a beat (even tempo)
-      const bpm = 200; // Beats per minute
-      const beatsPerHour = 1; // Each hour = 1 beat
-      const totalBeats = 24 * beatsPerHour;
-      const duration = (totalBeats / bpm) * 60; // Convert to seconds
+      // Musical timing: 24 hours at 200 BPM
+      const duration = 7.2; // (24 / 200) * 60 seconds
 
       const sampleRate = this.audioContext.sampleRate;
       const numSamples = duration * sampleRate;
@@ -256,22 +251,12 @@ export default class TimeOfDayActivity extends Component {
         let frequency =
           scale[lowerIndex] + (scale[upperIndex] - scale[lowerIndex]) * blend;
 
-        // Add smooth musical vibrato to low activity areas
         const time = i / sampleRate;
-        if (normalizedActivity < 0.3) {
-          // Very gentle vibrato for pleasant feel
-          const wobbleAmount = 1.5 * (0.3 - normalizedActivity);
-          const wobble =
-            Math.sin(2 * Math.PI * params.wobbleSpeed * time) * wobbleAmount;
-          frequency += wobble;
-        }
 
-        // Helper to generate soft retro waveform (square + triangle mix)
+        // Generate triangle waveform for retro feel
         const generateWave = (freq) => {
           const sine = Math.sin(2 * Math.PI * freq * time);
-          const square = sine > 0 ? 1 : -1;
-          const triangle = (2 / Math.PI) * Math.asin(sine);
-          return square * 0.5 + triangle * 0.5;
+          return (2 / Math.PI) * Math.asin(sine);
         };
 
         // Generate main voice and harmony
@@ -283,7 +268,7 @@ export default class TimeOfDayActivity extends Component {
 
         // Add bit crushing effect for retro feel
         const crushed =
-          Math.round(mixedWave * params.bitCrushSteps) / params.bitCrushSteps;
+          Math.round(mixedWave * this.BIT_CRUSH_STEPS) / this.BIT_CRUSH_STEPS;
 
         // Add minimal noise (sparkle at peak hour)
         const peakHourTime = (this.mostActiveHour / 23) * duration;
@@ -304,34 +289,6 @@ export default class TimeOfDayActivity extends Component {
       this.audioSource = this.audioContext.createBufferSource();
       this.audioSource.buffer = buffer;
 
-      // Create reverb impulse response
-      const reverbDuration = 2; // 2 seconds of reverb
-      const reverbSamples = sampleRate * reverbDuration;
-      const reverbBuffer = this.audioContext.createBuffer(
-        2,
-        reverbSamples,
-        sampleRate
-      );
-      const reverbLeft = reverbBuffer.getChannelData(0);
-      const reverbRight = reverbBuffer.getChannelData(1);
-
-      // Generate reverb impulse (exponential decay with randomness)
-      for (let i = 0; i < reverbSamples; i++) {
-        const decay = Math.exp(-3 * (i / reverbSamples)); // Exponential decay
-        reverbLeft[i] = (Math.random() * 2 - 1) * decay;
-        reverbRight[i] = (Math.random() * 2 - 1) * decay;
-      }
-
-      // Create convolver for reverb
-      const reverb = this.audioContext.createConvolver();
-      reverb.buffer = reverbBuffer;
-
-      // Create dry/wet mix for reverb (30% wet, 70% dry)
-      const dryGain = this.audioContext.createGain();
-      const wetGain = this.audioContext.createGain();
-      dryGain.gain.value = 0.7;
-      wetGain.gain.value = 0.3;
-
       // Add stereo panner (pan from left to right as time progresses)
       this.stereoPanner = this.audioContext.createStereoPanner();
       this.stereoPanner.pan.value = -1; // Start at left
@@ -341,17 +298,21 @@ export default class TimeOfDayActivity extends Component {
       filter.type = "lowpass";
       filter.frequency.value = 2500; // Tame the highs
 
-      // Connect audio graph: source -> filter -> split to dry/wet paths -> panner -> output
+      // Simple delay for subtle depth
+      const delay = this.audioContext.createDelay();
+      delay.delayTime.value = 0.15; // 150ms delay
+
+      const delayGain = this.audioContext.createGain();
+      delayGain.gain.value = 0.2; // Subtle echo
+
+      // Connect audio graph: source -> filter -> panner + delay feedback
       this.audioSource.connect(filter);
+      filter.connect(this.stereoPanner);
 
-      // Dry path (no reverb)
-      filter.connect(dryGain);
-      dryGain.connect(this.stereoPanner);
-
-      // Wet path (with reverb)
-      filter.connect(reverb);
-      reverb.connect(wetGain);
-      wetGain.connect(this.stereoPanner);
+      // Add subtle delay feedback
+      filter.connect(delay);
+      delay.connect(delayGain);
+      delayGain.connect(this.stereoPanner);
 
       this.stereoPanner.connect(this.audioContext.destination);
 
