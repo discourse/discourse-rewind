@@ -13,6 +13,12 @@ en:
       reports:
         activity_calendar:
           title: Activity Calendar
+          cell_title:
+            visited_no_posts: "You visited and lurked on %{date}, but made no posts."
+            visited_with_posts:
+              one: "You made %{count} post on %{date}."
+              other: "You made %{count} posts on %{date}."
+            no_activity: "You weren't around on %{date}."
         top_words:
           title: Word Usage
         reading_time:

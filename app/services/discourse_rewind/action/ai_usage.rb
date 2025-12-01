@@ -6,7 +6,31 @@
 module DiscourseRewind
   module Action
     class AiUsage < BaseReport
+      FakeData = {
+        data: {
+          total_requests: 247,
+          total_tokens: 156_890,
+          request_tokens: 45_230,
+          response_tokens: 111_660,
+          feature_usage: {
+            "chat_composer_helper" => 89,
+            "post_summarizer" => 56,
+            "semantic_search" => 42,
+            "topic_gist" => 38,
+            "similar_topics" => 22,
+          },
+          model_usage: {
+            "gpt-4" => 123,
+            "claude-3-5-sonnet" => 89,
+            "gpt-3.5-turbo" => 35,
+          },
+          success_rate: 94.7,
+        },
+        identifier: "ai-usage",
+      }
+
       def call
+        return FakeData if Rails.env.development?
         return if !enabled?
 
         base_query = AiApiRequestStat.where(user_id: user.id).where(bucket_date: date)

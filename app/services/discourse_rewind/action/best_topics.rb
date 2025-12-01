@@ -3,7 +3,32 @@
 module DiscourseRewind
   module Action
     class BestTopics < BaseReport
+      FakeData = {
+        data: [
+          {
+            topic_id: 1,
+            title: "How to get started with Rails",
+            excerpt: "A comprehensive guide to getting started with Ruby on Rails...",
+            yearly_score: 42.5,
+          },
+          {
+            topic_id: 2,
+            title: "Best practices for database optimization",
+            excerpt: "Learn how to optimize your database queries for better performance...",
+            yearly_score: 38.2,
+          },
+          {
+            topic_id: 3,
+            title: "Understanding ActiveRecord associations",
+            excerpt: "Deep dive into has_many, belongs_to, and other associations...",
+            yearly_score: 35.7,
+          },
+        ],
+        identifier: "best-topics",
+      }
+
       def call
+        return FakeData if Rails.env.development?
         best_topics =
           TopTopic
             .includes(:topic)
