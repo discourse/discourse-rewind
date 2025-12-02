@@ -125,6 +125,8 @@ p.reading-time__text {
   --book-color: var(--primary-very-high);
 
   @include rewind-border;
+  border-radius: 0 var(--rewind-border-radius) var(--rewind-border-radius)
+    var(--rewind-border-radius);
 
   @media screen and (width <= 475px) {
     padding: 0.75em;

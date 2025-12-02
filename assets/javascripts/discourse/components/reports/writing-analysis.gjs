@@ -1,7 +1,46 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
+import { action } from "@ember/object";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { i18n } from "discourse-i18n";
 
 export default class WritingAnalysis extends Component {
+  @tracked currentColorIndex = 0;
+
+  terminalColors = ["#0f0", "#ffbf00", "#00ffff", "#ff00ff"];
+
+  constructor() {
+    super(...arguments);
+    this.handleKeyDown = this.handleKeyDown.bind(this);
+  }
+
+  @action
+  setupKeyListener(element) {
+    document.addEventListener("keydown", this.handleKeyDown);
+    this.element = element;
+  }
+
+  @action
+  teardownKeyListener() {
+    document.removeEventListener("keydown", this.handleKeyDown);
+  }
+
+  handleKeyDown(event) {
+    if (event.key === "F1") {
+      event.preventDefault();
+      this.cycleColor();
+    }
+  }
+
+  @action
+  cycleColor() {
+    this.currentColorIndex =
+      (this.currentColorIndex + 1) % this.terminalColors.length;
+    const newColor = this.terminalColors[this.currentColorIndex];
+    document.documentElement.style.setProperty("--rewind-green", newColor);
+  }
+
   get scoreLabel() {
     const score = this.args.report.data.readability_score;
     const randomNum = Math.floor(Math.random() * 4) + 1;
@@ -31,7 +70,11 @@ export default class WritingAnalysis extends Component {
   }
 
   <template>
-    <div class="rewind-report-page --writing-analysis">
+    <div
+      class="rewind-report-page --writing-analysis"
+      {{didInsert this.setupKeyListener}}
+      {{willDestroy this.teardownKeyListener}}
+    >
       <h2 class="rewind-report-title">
         {{i18n "discourse_rewind.reports.writing_analysis.title"}}
       </h2>

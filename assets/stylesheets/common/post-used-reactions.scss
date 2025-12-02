@@ -1,6 +1,8 @@
 .--post-used-reactions {
   .rewind-card {
     @include rewind-border;
+    border-radius: 0 var(--rewind-border-radius) var(--rewind-border-radius)
+      var(--rewind-border-radius);
   }
 
   .rewind-reactions-chart {
