@@ -120,7 +120,9 @@ export default class ChatUsage extends Component {
           {{#if this.favoriteChannels.length}}
             <div class="chat-message --left">
               <BotMessage
-                @message={{i18n "discourse_rewind.reports.chat_usage.message_5"}}
+                @message={{i18n
+                  "discourse_rewind.reports.chat_usage.message_5"
+                }}
               >
                 <div class="chat-message__channels">
                   {{#each this.favoriteChannels as |channel|}}
