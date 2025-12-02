@@ -62,8 +62,8 @@ en:
         assignments:
           title: Assignments
           total_assigned: Assigned to me
-          completed: Assignments Completed
-          pending: Assignments Pending
+          completed: Assignments completed
+          pending: Assignments pending
           assigned_by_user: Assignments given
           completion_rate: Completion rate
         chat_usage:

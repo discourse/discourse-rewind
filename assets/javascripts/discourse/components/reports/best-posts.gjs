@@ -1,12 +1,12 @@
 import Component from "@glimmer/component";
-import { concat } from "@ember/helper";
 import { htmlSafe } from "@ember/template";
+import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class BestPosts extends Component {
-  rank(idx) {
-    return idx + 1;
+  rankClass(idx) {
+    return `rank-${idx + 1}`;
   }
 
   <template>
@@ -20,7 +20,7 @@ export default class BestPosts extends Component {
         </h2>
         <div class="rewind-report-container">
           {{#each @report.data as |post idx|}}
-            <div class={{concat "rewind-card" " rank-" (this.rank idx)}}>
+            <div class={{concatClass "rewind-card" (this.rankClass idx)}}>
               <span class="best-posts --rank"></span>
               <span class="best-posts --rank"></span>
               <div class="best-posts__post">
