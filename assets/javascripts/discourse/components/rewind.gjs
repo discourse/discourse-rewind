@@ -7,7 +7,6 @@ import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import ActivityCalendar from "discourse/plugins/discourse-rewind/discourse/components/reports/activity-calendar";
 import AiUsage from "discourse/plugins/discourse-rewind/discourse/components/reports/ai-usage";
@@ -73,6 +72,45 @@ export default class Rewind extends Component {
     this.rewindContainer = element;
   }
 
+  getReportComponent(identifier) {
+    switch (identifier) {
+      case "fbff":
+        return FBFF;
+      case "reactions":
+        return Reactions;
+      case "top-words":
+        return TopWords;
+      case "best-posts":
+        return BestPosts;
+      case "best-topics":
+        return BestTopics;
+      case "activity-calendar":
+        return ActivityCalendar;
+      case "most-viewed-tags":
+        return MostViewedTags;
+      case "reading-time":
+        return ReadingTime;
+      case "most-viewed-categories":
+        return MostViewedCategories;
+      case "ai-usage":
+        return AiUsage;
+      case "assignments":
+        return Assignments;
+      case "chat-usage":
+        return ChatUsage;
+      // case "favorite-gifs":
+      //   return FavoriteGifs;
+      case "invites":
+        return Invites;
+      case "new-user-interactions":
+        return NewUserInteractions;
+      case "time-of-day-activity":
+        return TimeOfDayActivity;
+      default:
+        return null;
+    }
+  }
+
   <template>
     <div
       class={{concatClass
@@ -106,41 +144,16 @@ export default class Rewind extends Component {
           >
 
             {{#each this.rewind as |report|}}
-              <div class={{concatClass "rewind-report" report.identifier}}>
-                {{#if (eq report.identifier "fbff")}}
-                  <FBFF @report={{report}} />
-                {{else if (eq report.identifier "reactions")}}
-                  <Reactions @report={{report}} />
-                {{else if (eq report.identifier "top-words")}}
-                  <TopWords @report={{report}} />
-                {{else if (eq report.identifier "best-posts")}}
-                  <BestPosts @report={{report}} />
-                {{else if (eq report.identifier "best-topics")}}
-                  <BestTopics @report={{report}} />
-                {{else if (eq report.identifier "activity-calendar")}}
-                  <ActivityCalendar @report={{report}} />
-                {{else if (eq report.identifier "most-viewed-tags")}}
-                  <MostViewedTags @report={{report}} />
-                {{else if (eq report.identifier "reading-time")}}
-                  <ReadingTime @report={{report}} />
-                {{else if (eq report.identifier "most-viewed-categories")}}
-                  <MostViewedCategories @report={{report}} />
-                {{else if (eq report.identifier "ai-usage")}}
-                  <AiUsage @report={{report}} />
-                {{else if (eq report.identifier "assignments")}}
-                  <Assignments @report={{report}} />
-                {{else if (eq report.identifier "chat-usage")}}
-                  <ChatUsage @report={{report}} />
-                  {{!-- else if (eq report.identifier "favorite-gifs")}}
-                  <FavoriteGifs @report={{report}} / --}}
-                {{else if (eq report.identifier "invites")}}
-                  <Invites @report={{report}} />
-                {{else if (eq report.identifier "new-user-interactions")}}
-                  <NewUserInteractions @report={{report}} />
-                {{else if (eq report.identifier "time-of-day-activity")}}
-                  <TimeOfDayActivity @report={{report}} />
+              {{#let
+                (this.getReportComponent report.identifier)
+                as |ReportComponent|
+              }}
+                {{#if ReportComponent}}
+                  <div class={{concatClass "rewind-report" report.identifier}}>
+                    <ReportComponent @report={{report}} />
+                  </div>
                 {{/if}}
-              </div>
+              {{/let}}
             {{/each}}
           </div>
 

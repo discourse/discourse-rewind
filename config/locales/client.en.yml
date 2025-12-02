@@ -121,8 +121,9 @@ en:
           subtitle:
             one: You helped %{count} new user this year
             other: You helped %{count} new users this year
-          member_singular: new member
-          member_plural: new members
+          new_member:
+            one: "%{count} new member"
+            other: "%{count} new members"
           total_interactions: Total Interactions
           unique_new_users: Unique New Users
           likes_given: Likes Given
