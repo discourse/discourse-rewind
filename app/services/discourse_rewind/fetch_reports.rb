@@ -25,6 +25,7 @@ module DiscourseRewind
     REPORTS = [
       Action::TopWords,
       Action::ReadingTime,
+      Action::WritingAnalysis,
       Action::Reactions,
       Action::Fbff,
       Action::MostViewedTags,

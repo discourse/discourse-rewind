@@ -25,6 +25,7 @@ import Reactions from "discourse/plugins/discourse-rewind/discourse/components/r
 import ReadingTime from "discourse/plugins/discourse-rewind/discourse/components/reports/reading-time";
 import TimeOfDayActivity from "discourse/plugins/discourse-rewind/discourse/components/reports/time-of-day-activity";
 import TopWords from "discourse/plugins/discourse-rewind/discourse/components/reports/top-words";
+import WritingAnalysis from "discourse/plugins/discourse-rewind/discourse/components/reports/writing-analysis";
 
 export default class Rewind extends Component {
   @tracked rewind = [];
@@ -106,6 +107,8 @@ export default class Rewind extends Component {
         return NewUserInteractions;
       case "time-of-day-activity":
         return TimeOfDayActivity;
+      case "writing-analysis":
+        return WritingAnalysis;
       default:
         return null;
     }

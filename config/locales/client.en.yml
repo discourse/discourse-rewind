@@ -134,3 +134,43 @@ en:
           title: Daily Activity Rhythm
           play_button: Play your activity as sound
           stop_button: Stop audio playback
+        writing_analysis:
+          title: Writing Analysis
+          menu_file: File
+          menu_other: Other
+          menu_additional: Additional
+          menu_opening: OPENING
+          help_text: Press F1 for help
+          app_name: DiscoStar Professional
+          release_info: Release 2025 from CDCK
+          total_words: Total Words
+          total_posts: Total Posts
+          avg_post_length: Avg Post Length
+          readability_score_label: Readability Score
+          readability_level: Readability Level
+          readability_score:
+            over_80:
+              1: "Ernest Hemingway"
+              2: "Raymond Carver"
+              3: "Michael Crichton"
+              4: "Roald Dahl"
+            over_60:
+              1: "J.K. Rowling"
+              2: "Stephen King"
+              3: "Agatha Christie"
+              4: "George R.R. Martin"
+            over_40:
+              1: "George Orwell"
+              2: "F. Scott Fitzgerald"
+              3: "Aldous Huxley"
+              4: "Joan Didion"
+            over_20:
+              1: "Cormac McCarthy"
+              2: "William Faulkner"
+              3: "Virgina Woolf"
+              4: "Gabriel Garcia Marquez"
+            over_0:
+              1: "James Joyce"
+              2: "Thomas Pynchon"
+              3: "David Foster Wallace"
+              4: "Fyodor Dostoevsky"
