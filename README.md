@@ -1,7 +1,5 @@
 # DiscourseRewind
 
-Display stats on your last year of Discourse usage.
+## DEPRECATED
 
-## Usage
-
-Navigate to `/my/activity/rewind`
+This plugin has been moved into Discourse core as at https://github.com/discourse/discourse/pull/36409/
